@@ -1,0 +1,15 @@
+---
+title: "MI studio project"
+author: "Yuriko Schumacher"
+date: "2/9/2021"
+output: html_document
+---
+```{r}
+library(tidyverse)
+match.stock <- read_csv("data/MTCH_0208.csv")
+
+ggplot(match.stock, mapping = aes(x = Date, y = Close)) +
+  geom_line()
+
+```
+
