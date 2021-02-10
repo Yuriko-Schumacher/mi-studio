@@ -42,16 +42,20 @@ d3.csv("data/MTCH_0208_reduced.csv").then(function (data) {
 		.attr("height", height)
 		.attr("width", width);
 
-	const circles = svg
-		.selectAll("cirlce")
-		.data(data)
-		.enter()
-		.append("circle")
-		.attr("cx", (d) => xScale(d.date))
-		.attr("cy", (d) => yScale(d.close))
-		.attr("r", 4)
-		.attr("fill", "white")
-		.attr("opacity", 0);
+	const accentLine = svg
+		.append("line")
+		.attr("x1", xScale(parseTime("2020-03-13")))
+		.attr("y1", margin.top)
+		.attr("x2", xScale(parseTime("2020-03-13")))
+		.attr("y2", height - margin.bottom)
+		.attr("stroke", "red");
+
+	const accentTime = svg
+		.append("text")
+		.attr("x", `${xScale(parseTime("2020-03-13")) + 10}px`)
+		.attr("y", yScale(140))
+		.text("March 13")
+		.attr("class", "accent-time");
 
 	const xAxis = svg
 		.append("g")
@@ -62,6 +66,17 @@ d3.csv("data/MTCH_0208_reduced.csv").then(function (data) {
 		.append("g")
 		.attr("transform", `translate(${margin.left}, 0)`)
 		.call(d3.axisLeft().scale(yScale));
+
+	const circles = svg
+		.selectAll("cirlce")
+		.data(data)
+		.enter()
+		.append("circle")
+		.attr("cx", (d) => xScale(d.date))
+		.attr("cy", (d) => yScale(d.close))
+		.attr("r", 4)
+		.attr("fill", "white")
+		.attr("opacity", 0);
 
 	const line = d3
 		.line()
@@ -78,21 +93,6 @@ d3.csv("data/MTCH_0208_reduced.csv").then(function (data) {
 		.attr("d", line)
 		.attr("fill", "none")
 		.attr("stroke", "black");
-
-	const accentLine = svg
-		.append("line")
-		.attr("x1", xScale(parseTime("2020-03-13")))
-		.attr("y1", margin.top)
-		.attr("x2", xScale(parseTime("2020-03-13")))
-		.attr("y2", height - margin.bottom)
-		.attr("stroke", "red");
-
-	const accentTime = svg
-		.append("text")
-		.attr("x", `${xScale(parseTime("2020-03-13")) + 10}px`)
-		.attr("y", yScale(140))
-		.text("March 13")
-		.attr("class", "accent-time");
 
 	// tooltip
 	const tooltip = d3.select(".tooltip");
