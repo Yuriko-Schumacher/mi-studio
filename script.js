@@ -67,17 +67,6 @@ d3.csv("data/MTCH_0208_reduced.csv").then(function (data) {
 		.attr("transform", `translate(${margin.left}, 0)`)
 		.call(d3.axisLeft().scale(yScale));
 
-	const circles = svg
-		.selectAll("cirlce")
-		.data(data)
-		.enter()
-		.append("circle")
-		.attr("cx", (d) => xScale(d.date))
-		.attr("cy", (d) => yScale(d.close))
-		.attr("r", 4)
-		.attr("fill", "white")
-		.attr("opacity", 0);
-
 	const line = d3
 		.line()
 		.x(function (d) {
@@ -93,6 +82,17 @@ d3.csv("data/MTCH_0208_reduced.csv").then(function (data) {
 		.attr("d", line)
 		.attr("fill", "none")
 		.attr("stroke", "black");
+
+	const circles = svg
+		.selectAll("cirlce")
+		.data(data)
+		.enter()
+		.append("circle")
+		.attr("cx", (d) => xScale(d.date))
+		.attr("cy", (d) => yScale(d.close))
+		.attr("r", 4)
+		.attr("fill", "black")
+		.attr("opacity", 0);
 
 	// tooltip
 	const tooltip = d3.select(".tooltip");
@@ -111,11 +111,11 @@ d3.csv("data/MTCH_0208_reduced.csv").then(function (data) {
 						Math.round(d.close * 100) / 100
 					}</b>`
 				);
-			d3.select(this).attr("fill", "black").attr("opacity", 1);
+			d3.select(this).attr("opacity", 1);
 		})
 		.on("mouseout", function () {
 			tooltip.style("display", "none");
-			d3.select(this).attr("fill", "white").attr("opacity", 0);
+			d3.select(this).attr("opacity", 0);
 		});
 
 	const xAxisLabel = svg
