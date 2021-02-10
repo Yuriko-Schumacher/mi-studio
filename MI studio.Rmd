@@ -6,10 +6,10 @@ output: html_document
 ---
 ```{r}
 library(tidyverse)
-match.stock <- read_csv("data/MTCH_0208.csv") %>% 
+match.stock <- read_csv("data/MTCH_3yrs_0209.csv") %>% 
   select(date = Date,
          close = Close)
-write.csv(match.stock, "data/MTCH_0208_reduced.csv", row.names = FALSE)
+write.csv(match.stock, "data/MTCH_3yrs_0209_reduced.csv", row.names = FALSE)
 
 ggplot(match.stock, mapping = aes(x = date, y = close)) +
   geom_line()

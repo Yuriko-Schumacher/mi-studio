@@ -1,6 +1,6 @@
 let stockData;
 
-d3.csv("data/MTCH_0208_reduced.csv").then(function (data) {
+d3.csv("data/MTCH_3yrs_0209_reduced.csv").then(function (data) {
 	const parseTime = d3.timeParse("%Y-%m-%d");
 	console.log(data);
 	data.forEach(function (d) {
@@ -107,7 +107,7 @@ d3.csv("data/MTCH_0208_reduced.csv").then(function (data) {
 				.style("top", `${y}px`)
 				.style("left", `${x}px`)
 				.html(
-					`${formatTime(d.date)}<br>price: <b>${
+					`${formatTime(d.date)}<br>price: $<b>${
 						Math.round(d.close * 100) / 100
 					}</b>`
 				);
@@ -131,5 +131,5 @@ d3.csv("data/MTCH_0208_reduced.csv").then(function (data) {
 		.attr("y", margin.left / 2 - 10)
 		.attr("transform", "rotate(-90)")
 		.attr("text-anchor", "middle")
-		.text("Price");
+		.text("Price ($)");
 });
