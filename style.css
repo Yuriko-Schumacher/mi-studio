@@ -13,15 +13,46 @@ body {
 	color: #303030;
 }
 
+h4 {
+	margin: 0 auto;
+	width: 45ch;
+	text-align: center;
+}
+
 .chart {
-	width: 80%;
+	width: 90%;
 	margin: 0 auto;
 }
 
-#match-stock {
-	height: 70vh;
-	width: 100%;
+.container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#match-stock,
+#survey {
+	height: 300px;
+	width: 80%;
+	max-width: 1000px;
 	position: relative;
+}
+
+#questions {
+	font-size: 10px;
+	color: rgb(147, 147, 147);
+	line-height: 1;
+	margin: 0;
+}
+
+#questions > li {
+	margin: 0.8em 0;
+	cursor: pointer;
+}
+
+.question-active {
+	font-weight: bold;
+	color: black;
 }
 
 .accent-time {

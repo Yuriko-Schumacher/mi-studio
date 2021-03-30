@@ -1,135 +1,228 @@
-let stockData;
+const width = document.querySelector("#survey").clientWidth;
+const height = document.querySelector("#survey").clientHeight;
+const margin = { top: 25, right: 25, bottom: 75, left: 75 };
+const svg = d3
+	.select("#survey")
+	.append("svg")
+	.attr("width", width)
+	.attr("height", height);
 
-d3.csv("data/MTCH_3yrs_0209_reduced.csv").then(function (data) {
-	const parseTime = d3.timeParse("%Y-%m-%d");
+const containerG = svg.append("g").classed("container", true);
+
+let node;
+
+let questions = [
+	"How much the pandemic has impacted your desire to connect with other people?",
+	"As the pandemic has gone on, have you experienced increased loneliness or other negative emotions?",
+	"When you feel lonely or experience other negative emotions, how important is it that people close to you acknowledge and recognize that feeling?",
+	"As the pandemic has gone on, how has it impacted your ability to be comfortable or happy while alone?",
+	"If you hadn't been using dating applications before the pandemic, how long did it take for you to begin using one when the pandemic hit?",
+	"If you had been using dating applications before the pandemic, did you begin using them more regularly? How much more?",
+	"Before the pandemic, how likely were you to overlook potential “deal breaking” aspects of a match for any reason? (attractiveness, personality quirks, job status, etc)?",
+	"As the pandemic continues, how would you describe yourself when deciding if you want to match with someone?",
+	"Before the pandemic, how important was it for you to know that your match was healthy? (STI Free, Communicable Disease Free, ETC)",
+	"How likely are you to trust a match who assures you that they are healthy without providing proof of a negative COVID test result?",
+	"Before the pandemic, when you were in a relationship, how important was physical intimacy to you?",
+	"If a potential match expresses a strong need for physical intimacy on their profile, how likely are you to try to match with them?",
+	"When deciding on a date with a new match, do you prefer a virtual date or an in person date?",
+];
+
+let QandA = {
+	desireToConnect: [
+		"Heavily increased",
+		"Moderately increased",
+		"Not at all",
+		"Moderately decreased",
+		"Heavily decreased",
+		"YI",
+	],
+	increasedLoneliness: ["Yes, often", "Yes, sometimes", "No noticed change"],
+	recognizeLoneliness: [
+		"Very Important",
+		"Somewhat Important",
+		"Generally Welcome",
+		"Somewhat Unimportant",
+		"Very Unimportant",
+	],
+	abilityToBeHappy: [
+		"Significantly decreased my ability",
+		"Somewhat decreased my ability",
+		"No noted difference",
+		"Somewhat increased my ability",
+		"Significantly increased my ability",
+	],
+	timeToUseApp: [
+		"1-2 weeks",
+		"3-4 weeks",
+		"1-3 months",
+		"4-6 months",
+		"7-9 months",
+	],
+	frequencyOfUseage: [
+		"Much more often",
+		"Somewhat more often",
+		"Used same amount",
+		"Somewhat less often",
+		"Much less often",
+	],
+	dealBreaking: [
+		"Very likely",
+		"Somewhat likely",
+		"Somewhat unlikely",
+		"Very unlikely",
+	],
+	matchingAttitudes: [
+		"Very particular",
+		"Somewhat particular",
+		"Moderate",
+		"Somewhat easy going",
+		"Very easy going",
+	],
+	healthConfirmationPrePandemic: [
+		"Very Important",
+		"Somewhat Important",
+		"Important",
+		"Somewhat Unimportant",
+		"Very Unimportant",
+	],
+	withoutProof: [
+		"Very Likely",
+		"Somewhat Likely",
+		"Likely",
+		"Somewhat Unlikely",
+		"Very Unlikely",
+	],
+	physicalIntimacyPrePandemic: [
+		"Very Important",
+		"Somewhat Important",
+		"Important",
+		"Somewhat Unimportant",
+		"Very Unimportant",
+	],
+	physicalIntimacyMatching: [
+		"Very Likely",
+		"Somewhat Likely",
+		"Likely",
+		"Somewhat Unlikely",
+		"Very Unlikely",
+	],
+	virtualOrF2f: [
+		"I prefer a virtual date",
+		"I prefer an in person date",
+		"It depends on my match",
+	],
+};
+d3.csv("data/survey-cleaned.csv").then(function (data) {
 	console.log(data);
-	data.forEach(function (d) {
-		return (d.date = parseTime(d.date));
+	populateQuestions(data);
+
+	colorScale = d3
+		.scaleOrdinal()
+		.domain(selectQuestion(data, 0).map((el) => el[0]))
+		.range([
+			"#FF007F", // Rose
+			"#FFADD8", // Carnation Pink
+			"#f7f7f7", // White
+			"#ADF5FF", // Celeste
+			"#19E3FF", // Sky Blue Crayola
+			"#ccc",
+		]);
+
+	changeViz(data, 0);
+
+	d3.select("#questions")
+		.selectAll(".question")
+		.on("click", function () {
+			d3.selectAll(".question").classed("question-active", false);
+			d3.select(this).classed("question-active", true);
+			let clickedQuestion = d3.select(this).nodes()[0].textContent;
+			let questionIndex = questions.findIndex(
+				(el) => el === clickedQuestion
+			);
+			xAxis.remove();
+			changeViz(data, questionIndex);
+		});
+});
+
+function changeViz(data, index) {
+	addQuestion(index);
+	drawNodes(data, index, selectQuestion(data, index));
+}
+
+function populateQuestions(data) {
+	questions.forEach((question) => {
+		d3.select("#questions")
+			.append("li")
+			.text(question)
+			.classed("question", true);
 	});
+}
 
-	const width = document.querySelector("#match-stock").clientWidth;
-	const height = document.querySelector("#match-stock").clientHeight;
-	const vw = window.innerWidth;
-	const margin = { top: 25, right: 25, bottom: 75, left: 75 };
+function addQuestion(index) {
+	d3.select("#question").text(questions[index]);
+}
 
-	const xScale = d3
-		.scaleTime()
-		.domain([
-			d3.min(data, function (d) {
-				return d.date;
-			}),
-			d3.max(data, function (d) {
-				return d.date;
-			}),
-		])
+function selectQuestion(data, index) {
+	let thisQ = Object.keys(QandA)[index];
+	options = d3.group(data, (d) => d[thisQ]);
+	options = Array.from(options).sort((a, b) => {
+		let choices = QandA[thisQ];
+		if (choices.indexOf(a[0]) > choices.indexOf(b[0])) {
+			return 1;
+		} else {
+			return -1;
+		}
+	});
+	return options;
+}
+
+function drawNodes(data, index, options) {
+	// create scale
+	xScale = d3
+		.scaleBand()
+		.domain(options.map((el) => el[0]))
 		.range([margin.left, width - margin.right]);
 
-	const yScale = d3
-		.scaleLinear()
-		.domain([
-			d3.min(data, function (d) {
-				return +d.close;
-			}) - 10,
-			d3.max(data, function (d) {
-				return +d.close;
-			}) + 10,
-		])
-		.range([height - margin.bottom, margin.top]);
-
-	const svg = d3
-		.select("#match-stock")
-		.append("svg")
-		.attr("height", height)
-		.attr("width", width);
-
-	const accentLine = svg
-		.append("line")
-		.attr("x1", xScale(parseTime("2020-03-13")))
-		.attr("y1", margin.top)
-		.attr("x2", xScale(parseTime("2020-03-13")))
-		.attr("y2", height - margin.bottom)
-		.attr("stroke", "red");
-
-	const accentTime = svg
-		.append("text")
-		.attr("x", `${xScale(parseTime("2020-03-13")) + 10}px`)
-		.attr("y", yScale(140))
-		.text("March 13")
-		.attr("class", "accent-time");
-
-	const xAxis = svg
+	xAxis = containerG
 		.append("g")
-		.attr("transform", `translate(0, ${height - margin.bottom})`)
-		.call(d3.axisBottom().scale(xScale));
+		.call(d3.axisBottom(xScale))
+		.attr("transform", `translate(0, ${height - margin.bottom + 20})`);
 
-	const yAxis = svg
-		.append("g")
-		.attr("transform", `translate(${margin.left}, 0)`)
-		.call(d3.axisLeft().scale(yScale));
+	let thisQ = Object.keys(QandA)[index];
 
-	const line = d3
-		.line()
-		.x(function (d) {
-			return xScale(d.date);
-		})
-		.y(function (d) {
-			return yScale(d.close);
+	let simulation = d3
+		.forceSimulation(data)
+		// .force('center', )
+		.force("collide", d3.forceCollide().radius(5.5))
+		.force("charge", d3.forceManyBody().strength(0.3))
+		.force(
+			"x",
+			d3.forceX().x((d) => xScale(d[thisQ]))
+		)
+		.force("y", d3.forceY().y(height / 2));
+
+	if (typeof node === "undefined") {
+		node = svg
+			.append("g")
+			.attr("transform", `translate(${margin.left}, 0)`)
+			.attr("stroke", "lightgray")
+			.attr("stroke-width", 1)
+			.selectAll("circle")
+			.data(data, (d) => d.index)
+			.enter()
+			.append("circle")
+			.attr("yy", (d) => d[thisQ])
+			.attr("r", 5)
+			.attr("fill", (d) => colorScale(d.desireToConnect));
+
+		simulation.on("tick", () => {
+			node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 		});
-
-	const path = svg
-		.append("path")
-		.datum(data)
-		.attr("d", line)
-		.attr("fill", "none")
-		.attr("stroke", "black");
-
-	const circles = svg
-		.selectAll("cirlce")
-		.data(data)
-		.enter()
-		.append("circle")
-		.attr("cx", (d) => xScale(d.date))
-		.attr("cy", (d) => yScale(d.close))
-		.attr("r", 4)
-		.attr("fill", "black")
-		.attr("opacity", 0);
-
-	// tooltip
-	const tooltip = d3.select(".tooltip");
-	const formatTime = d3.timeFormat("%m/%d/%y");
-
-	circles
-		.on("mouseover", function (e, d) {
-			let x = +d3.select(this).attr("cx") + 0.1 * vw + 10;
-			let y = +d3.select(this).attr("cy") + 74.847 + 10;
-			tooltip
-				.style("display", "block")
-				.style("top", `${y}px`)
-				.style("left", `${x}px`)
-				.html(
-					`${formatTime(d.date)}<br>price: $<b>${
-						Math.round(d.close * 100) / 100
-					}</b>`
-				);
-			d3.select(this).attr("opacity", 1);
-		})
-		.on("mouseout", function () {
-			tooltip.style("display", "none");
-			d3.select(this).attr("opacity", 0);
+	} else {
+		simulation.on("tick", () => {
+			node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 		});
+	}
 
-	const xAxisLabel = svg
-		.append("text")
-		.attr("x", width / 2)
-		.attr("y", height - margin.bottom / 2 + 10)
-		.attr("text-anchor", "middle")
-		.text("Date");
-
-	const yAxisLabel = svg
-		.append("text")
-		.attr("x", -height / 2)
-		.attr("y", margin.left / 2 - 10)
-		.attr("transform", "rotate(-90)")
-		.attr("text-anchor", "middle")
-		.text("Price ($)");
-});
+	// .call(drag(simulation));
+}

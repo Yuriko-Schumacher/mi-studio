@@ -6,6 +6,10 @@ output: html_document
 ---
 ```{r}
 library(tidyverse)
+install.packages("zoo")
+library(zoo)
+library(geofacet)
+library(GGally)
 match.stock <- read_csv("data/MTCH_3yrs_0209.csv") %>% 
   select(date = Date,
          close = Close)
@@ -14,6 +18,331 @@ write.csv(match.stock, "data/MTCH_3yrs_0209_reduced.csv", row.names = FALSE)
 ggplot(match.stock, mapping = aes(x = date, y = close)) +
   geom_line()
 
+```
 
+```{r avg-subscribers}
+quarter <- c("Q1 '19", "Q2 '19", "Q3 '19", "Q4 '19", "Q1 '20", "Q2 '20", "Q3 '20", "Q4 '20")
+avg.sub <- c(4361, 4518, 4695, 4637, 4570, 4703, 5112, 5043)
+df <- data.frame(quarter, avg.sub) %>% 
+  mutate(quater.formatted = as.yearqtr(format(quarter), "Q%q '%y"))
+
+df %>% 
+  ggplot(aes(x = quater.formatted, y = avg.sub, group = 1)) +
+  geom_line() +
+  labs(title = "Match Group Average Subscribers in North America",
+       x = "Quarter", y = "Average Subscribers",
+       caption = "Source: Match Group") +
+  theme_bw()
+
+```
+
+
+# Google trend dataset
+```{r}
+# Covid Depression
+
+data_path1 <- "data/google trends/Covid Depression Google trends"
+files <- dir(data_path1, pattern = "*.csv")
+covid.depression <- files %>% 
+  map(~ read.csv(file.path(data_path1, .))) %>% 
+  reduce(cbind)
+
+tempCovid <- covid.depression
+tempCovid[] <- lapply(covid.depression, as.character)
+colnames(covid.depression) <-tempCovid[1, ]
+covid.depression <- covid.depression[-1, ]
+tempCovid <- NULL
+
+state.51 <- append(state.abb, values = "DC", after = 7)
+state.50 <- setdiff(state.51, "WY")
+
+colnames(covid.depression) <- state.50
+covid.depression <- rownames_to_column(covid.depression, var = "week")
+covid.depression <- covid.depression %>% 
+  gather(key = state, value = proportion, AL:WI)
+covid.depression$proportion <- as.numeric(covid.depression$proportion)
+covid.depression$week <- as.Date(covid.depression$week)
+
+# Covid
+data_path2 <- "data/google trends/covid search term"
+files <- dir(data_path2, pattern = "*.csv")
+covid <- files %>% 
+  map(~ read.csv(file.path(data_path2, .), row.names = 1)) %>% 
+  reduce(cbind)
+
+tempCovid <- covid
+tempCovid[] <- lapply(covid, as.character)
+colnames(covid) <-tempCovid[1, ]
+covid <- covid[-1, ]
+tempCovid <- NULL
+
+colnames(covid) <- state.51
+covid <- rownames_to_column(covid, var = "week")
+covid <- covid %>% 
+  gather(key = state, value = proportion, AL:WY)
+covid$proportion <- as.numeric(covid$proportion)
+covid$week <- as.Date(covid$week)
+
+# Online Dating
+data_path3 <- "data/google trends/Online Dating"
+files <- dir(data_path3, pattern = "*.csv")
+online.dating <- files %>% 
+  map(~ read.csv(file.path(data_path3, .))) %>% 
+  reduce(cbind)
+
+temp <- online.dating
+temp[] <- lapply(online.dating, as.character)
+colnames(online.dating) <-temp[1, ]
+online.dating <- online.dating[-1, ]
+temp <- NULL
+
+colnames(online.dating) <- state.51
+online.dating <- rownames_to_column(online.dating, var = "week")
+online.dating <- online.dating %>% 
+  gather(key = state, value = proportion, AL:WY)
+online.dating$proportion <- as.numeric(online.dating$proportion)
+online.dating$week <- as.Date(online.dating$week)
+
+# Covid date
+data_path4 <- "data/google trends/covid date"
+files <- dir(data_path4, pattern = "*.csv")
+covid.date <- files %>% 
+  map(~ read.csv(file.path(data_path4, .))) %>% 
+  reduce(cbind)
+
+temp <- covid.date
+temp[] <- lapply(covid.date, as.character)
+colnames(covid.date) <-temp[1, ]
+covid.date <- covid.date[-1, ]
+temp <- NULL
+
+colnames(covid.date) <- state.51
+covid.date <- rownames_to_column(covid.date, var = "week")
+covid.date <- covid.date %>% 
+  gather(key = state, value = proportion, AL:WY)
+covid.date$proportion <- as.numeric(covid.date$proportion)
+covid.date$week <- as.Date(covid.date$week)
+
+# topic: online dating application
+data_path5 <- "data/google trends/topic online dating application"
+files <- dir(data_path5, pattern = "*.csv")
+topic.online.dating.app <- files %>% 
+  map(~ read.csv(file.path(data_path5, .))) %>% 
+  reduce(cbind)
+
+temp <- topic.online.dating.app
+temp[] <- lapply(topic.online.dating.app, as.character)
+colnames(topic.online.dating.app) <-temp[1, ]
+topic.online.dating.app <- topic.online.dating.app[-1, ]
+temp <- NULL
+
+colnames(topic.online.dating.app) <- state.51
+topic.online.dating.app <- rownames_to_column(topic.online.dating.app, var = "week")
+topic.online.dating.app <- topic.online.dating.app %>% 
+  gather(key = state, value = proportion, AL:WY)
+topic.online.dating.app$proportion <- as.numeric(topic.online.dating.app$proportion)
+topic.online.dating.app$week <- as.Date(topic.online.dating.app$week)
+
+# Tinder
+data_path6 <- "data/google trends/Tinder"
+files <- dir(data_path6, pattern = "*.csv")
+tinder <- files %>% 
+  map(~ read.csv(file.path(data_path6, .), row.names = 1)) %>% 
+  reduce(cbind)
+
+temp <- tinder
+temp[] <- lapply(tinder, as.character)
+colnames(tinder) <-temp[1, ]
+tinder <- tinder[-1, ]
+temp <- NULL
+
+colnames(tinder) <- state.51
+tinder <- rownames_to_column(tinder, var = "week")
+tinder <- tinder %>% 
+  gather(key = state, value = proportion, AL:WY)
+tinder$proportion <- as.numeric(tinder$proportion)
+tinder$week <- as.Date(tinder$week)
+
+```
+
+# Geofacet
+
+```{r}
+
+# Covid depression
+ggplot(covid.depression, aes(x = week, y = proportion)) +
+  geom_line(group = 1, size = 0.2) +
+  facet_geo(~ state, grid = "us_state_grid2", scales = "free_y") +
+  labs(x = NULL, y = NULL, title = 'Google trends for search term "Covid depression" for the past year, per US states') +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+# Covid
+ggplot(covid, aes(x = week, y = proportion)) +
+  geom_line(group = 1, size = 0.2) +
+  facet_geo(~ state, grid = "us_state_grid2", scales = "free_y") +
+  labs(x = NULL, y = NULL, title = 'Google trends for search term "Covid" for the past year, per US states') +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+# Online dating
+ggplot(online.dating, aes(x = week, y = proportion)) +
+  geom_line(group = 1, size = 0.2) +
+  facet_geo(~ state, grid = "us_state_grid2") +
+  labs(x = NULL, y = NULL, title = 'Google trends for search term "online dating" for the past year, per US states') +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+# Covid date
+ggplot(covid.date, aes(x = week, y = proportion)) +
+  geom_line(group = 1, size = 0.2) +
+  facet_geo(~ state, grid = "us_state_grid2") +
+  labs(x = NULL, y = NULL, title = 'Weekly Google trends for search term "covid date" for the past year, per US states') +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+# Topic: online dating application
+ggplot(topic.online.dating.app, aes(x = week, y = proportion)) +
+  geom_line(group = 1, size = 0.2) +
+  facet_geo(~ state, grid = "us_state_grid2") +
+  labs(x = NULL, y = NULL, title = 'Google trends for topic "online dating application" for the past year, per US states') +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+# Tinder
+ggplot(tinder, aes(x = week, y = proportion)) +
+  geom_line(group = 1, size = 0.2) +
+  facet_geo(~ state, grid = "us_state_grid2") +
+  labs(x = NULL, y = NULL, title = 'Google trends for the app "Tinder" for the past year, per US states') +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+  
+```
+
+
+```{r}
+# Corelation between "Covid" and "online dating"
+covid.reduced <- covid %>% 
+  rename(covid = proportion)
+
+online.dating.reduced <- online.dating %>% 
+  select(state, online.dating = proportion)
+
+state.50 %>% 
+  map(function(x) 
+    separated <- cbind(covid.reduced %>% filter(state == "AL"),
+            online.dating.reduced %>% filter(state == "AL")) %>%
+  select(week, covid, online.dating)
+    
+    )
+
+count <- 0
+for (i in 1:51) {
+  state <- cbind(covid.reduced %>% filter(state == state.51[i]),
+            online.dating.reduced %>% filter(state == state.51[i])) %>%
+  select(week, covid, online.dating)
+  count[i] = cor(x = state$covid, y = state$online.dating)
+}
+count
+
+cor <- data.frame(state = state.51, correlation = count)
+
+ggplot(data = cor, aes(x = state, y = correlation)) +
+  geom_point()
+
+ggplot(cor, aes(x = state, y = 51)) +
+  geom_tile() +
+  facet_geo(~ state, grid = "us_state_grid2") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text.y = element_blank()
+  )
+
+covid.date %>% 
+  filter(state %in% c("CA", "TX", "FL", "OH", "NJ", "CO", "TN")) %>% 
+  ggplot(aes(x = week, y = proportion)) +
+  geom_line(group = 1) +
+  facet_wrap(vars(state), scales = "free_y", nrow = 4) +
+  theme_minimal() +
+  labs(title = 'Google trends for search term "covid date" for the past year', subtitle = "for seven US states with similar trends")
+
+covid.date %>% 
+  filter(state %in% c("WA", "UT", "AR", "LA", "IL", "GA", "VA", "IN")) %>% 
+  ggplot(aes(x = week, y = proportion)) +
+  geom_line(group = 1) +
+  facet_wrap(vars(state), scales = "free_y", nrow = 4) +
+  theme_minimal() +
+  labs(title = 'Google trends for search term "covid date" for the past year, for eight US states')
+
+
+``` 
+
+# Waffle chart
+
+```{r}
+install.packages("waffle")
+library(waffle)
+library(tidyverse)
+```
+
+```{r}
+survey.raw <- read_csv("data/survey-results.csv")
+survey <- survey.raw %>% 
+  select(-time, -email) %>% 
+  rename(timeSpentPrePandemic = `time.spent.pre-pandemic`,
+         desireToConnect = desire.to.connect,
+         increasedLoneliness = increased.loneliness,
+         whoToReachPrePandemic = `who.to.reach.pre-pandemic`,
+         recognizeLoneliness = recognize.loneliness,
+         abilityToBeHappy = ability.to.be.happy,
+         timeToUseApp = time.to.use.app,
+         frequencyOfUseage = frequency.of.usage,
+         dealBreaking = deal.breaking,
+         matchingAttitudes = matching.attitudes,
+         healthConfirmationPrePandemic = `health.comfirmation.pre-pandemic`,
+         withoutProof = without.proof,
+         physicalIntimacyPrePandemic = `physical.intimacy.pre-pandemic`,
+         physicalIntimabyMatching = physical.intimacy.matching,
+         healthMandates = health.mandates,
+         virtualOrF2f = virtual.or.f2f)
+write_csv(survey, "data/survey-cleaned.csv")
+
+desire.to.connect <- survey.raw %>% 
+  group_by(desire.to.connect) %>% 
+  summarize(count = n())
+desire.to.connect <- c("Heavily increased" = 65,
+                       "Moderately increased" = 80,
+                       "Not at all" = 12,
+                       "Moderately decreased" = 44,
+                       "Heavily decreased" = 2,
+                       "YI" = 1)
+waffle(desire.to.connect, rows = 5, size = 0.5,
+       colors = c("#7b3294", "#c2a5cf", "#d9d9d9", "#a6dba0", "#008837", "#999999"),
+       title = "How much has the pandemic impacted your desire to connect with other people?",
+       xlab = "Results from 204 college students and young professionals") +
+  theme(
+    plot.title = element_text(size = 12),
+    legend.position = "none"
+  )
 ```
 
