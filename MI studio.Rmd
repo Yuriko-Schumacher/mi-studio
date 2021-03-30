@@ -322,7 +322,7 @@ survey <- survey.raw %>%
          healthConfirmationPrePandemic = `health.comfirmation.pre-pandemic`,
          withoutProof = without.proof,
          physicalIntimacyPrePandemic = `physical.intimacy.pre-pandemic`,
-         physicalIntimabyMatching = physical.intimacy.matching,
+         physicalIntimacyMatching = physical.intimacy.matching,
          healthMandates = health.mandates,
          virtualOrF2f = virtual.or.f2f)
 write_csv(survey, "data/survey-cleaned.csv")

@@ -129,6 +129,9 @@ d3.csv("data/survey-cleaned.csv").then(function (data) {
 		]);
 
 	changeViz(data, 0);
+	d3.select("#questions")
+		.select(".question")
+		.classed("question-active", true);
 
 	d3.select("#questions")
 		.selectAll(".question")
