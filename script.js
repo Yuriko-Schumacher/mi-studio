@@ -12,7 +12,7 @@ const containerG = svg.append("g").classed("container", true);
 let node;
 
 let questions = [
-	"How much the pandemic has impacted your desire to connect with other people?",
+	"How much has the pandemic impacted your desire to connect with other people?",
 	"As the pandemic has gone on, have you experienced increased loneliness or other negative emotions?",
 	"When you feel lonely or experience other negative emotions, how important is it that people close to you acknowledge and recognize that feeling?",
 	"As the pandemic has gone on, how has it impacted your ability to be comfortable or happy while alone?",
@@ -20,11 +20,15 @@ let questions = [
 	"If you had been using dating applications before the pandemic, did you begin using them more regularly? How much more?",
 	"Before the pandemic, how likely were you to overlook potential “deal breaking” aspects of a match for any reason? (attractiveness, personality quirks, job status, etc)?",
 	"As the pandemic continues, how would you describe yourself when deciding if you want to match with someone?",
-	"Before the pandemic, how important was it for you to know that your match was healthy? (STI Free, Communicable Disease Free, ETC)",
+	"Before the pandemic, how important was it for you to know that your match was healthy? (STI Free, Communicable Disease Free, etc)",
 	"How likely are you to trust a match who assures you that they are healthy without providing proof of a negative COVID test result?",
 	"Before the pandemic, when you were in a relationship, how important was physical intimacy to you?",
 	"If a potential match expresses a strong need for physical intimacy on their profile, how likely are you to try to match with them?",
 	"When deciding on a date with a new match, do you prefer a virtual date or an in person date?",
+	"How old are you?",
+	"How would you describe your ethnic background?",
+	"What is your sexual orientation?",
+	"Are you an introvert or an extrovert?",
 ];
 
 let QandA = {
@@ -111,6 +115,24 @@ let QandA = {
 		"I prefer an in person date",
 		"It depends on my match",
 	],
+	age: ["18-21", "22-26", "27-29"],
+	ethnisity: [
+		"White",
+		"Black",
+		"Asian",
+		"East Asian",
+		"South Asian",
+		"Spanish",
+		"Hispanic",
+		"Islander",
+		"Pacific Islander",
+		"Middle Eastern",
+		"African",
+		"South American",
+		"Other",
+	],
+	sexuality: ["Heterosexual", "Homosexual", "Bisexual", "Pansexual", "Other"],
+	personality: ["Introvert (less outgoing)", "Extrovert (more outgoing)"],
 };
 d3.csv("data/survey-cleaned.csv").then(function (data) {
 	console.log(data);
