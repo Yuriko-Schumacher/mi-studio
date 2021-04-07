@@ -327,6 +327,11 @@ survey <- survey.raw %>%
          virtualOrF2f = virtual.or.f2f)
 write_csv(survey, "data/survey-cleaned.csv")
 
+survey %>% 
+  group_by(dealBreaking) %>% 
+  summarize(total = n()) %>% 
+  mutate(percentage = total / 204 * 100)
+
 desire.to.connect <- survey.raw %>% 
   group_by(desire.to.connect) %>% 
   summarize(count = n())

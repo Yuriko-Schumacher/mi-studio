@@ -1,9 +1,11 @@
+// ---------- DATA VIZ ----------
 const width = document.querySelector("#survey").clientWidth;
 const height = document.querySelector("#survey").clientHeight;
 const margin = { top: 25, right: 25, bottom: 75, left: 75 };
 const svg = d3
 	.select("#survey")
 	.append("svg")
+	.attr("id", "surveySvg")
 	.attr("width", width)
 	.attr("height", height);
 
@@ -38,7 +40,6 @@ let QandA = {
 		"Not at all",
 		"Moderately decreased",
 		"Heavily decreased",
-		"YI",
 	],
 	increasedLoneliness: ["Yes, often", "Yes, sometimes", "No noticed change"],
 	recognizeLoneliness: [
@@ -146,7 +147,7 @@ d3.csv("data/survey-cleaned.csv").then(function (data) {
 			"#FFADD8", // Carnation Pink
 			"#f7f7f7", // White
 			"#ADF5FF", // Celeste
-			"#19E3FF", // Sky Blue Crayola
+			"#0C94E8", // Sky Blue Crayola
 			"#ccc",
 		]);
 
@@ -165,6 +166,7 @@ d3.csv("data/survey-cleaned.csv").then(function (data) {
 				(el) => el === clickedQuestion
 			);
 			xAxis.remove();
+			xAxis2.remove();
 			changeViz(data, questionIndex);
 		});
 });
@@ -190,28 +192,63 @@ function addQuestion(index) {
 function selectQuestion(data, index) {
 	let thisQ = Object.keys(QandA)[index];
 	options = d3.group(data, (d) => d[thisQ]);
-	options = Array.from(options).sort((a, b) => {
-		let choices = QandA[thisQ];
-		if (choices.indexOf(a[0]) > choices.indexOf(b[0])) {
-			return 1;
-		} else {
-			return -1;
-		}
+	options = Array.from(options);
+	let choices = QandA[thisQ];
+	options.sort((a, b) => {
+		return choices.indexOf(a[0]) > choices.indexOf(b[0]) ? 1 : -1;
 	});
+
+	// // add default option to the actual answers
+	let options2 = options.map((el) => el[0]);
+	let options3 = options2.filter((el) => el !== "NA");
+	let missingOption = choices.filter((i) => options3.indexOf(i) == -1);
+	if (missingOption.length > 0) {
+		options.push(missingOption);
+	}
+
+	// sort again
+	if (options.length > choices.length) {
+		choices.push("NA");
+	}
+	options.sort((a, b) => {
+		return choices.indexOf(a[0]) > choices.indexOf(b[0]) ? 1 : -1;
+	});
+
 	return options;
 }
 
 function drawNodes(data, index, options) {
 	// create scale
+	let filteredOption = options.filter((el) => el.length >= 2);
+	console.log(filteredOption.map((el) => el[1].length));
+
 	xScale = d3
 		.scaleBand()
-		.domain(options.map((el) => el[0]))
+		.domain(filteredOption.map((el) => el[0]))
 		.range([margin.left, width - margin.right]);
 
 	xAxis = containerG
 		.append("g")
+		.classed("x-axis", true)
 		.call(d3.axisBottom(xScale))
-		.attr("transform", `translate(0, ${height - margin.bottom + 20})`);
+		.attr("transform", `translate(0, ${height - margin.bottom + 10})`);
+
+	// let xScale2 = d3
+	// 	.scaleBand()
+	// 	.domain(filteredOption.map((el) => String(el[1].length)))
+	// 	.range([margin.left, width - margin.right]);
+
+	xAxis2 = containerG
+		.append("g")
+		.classed("x-axis", true)
+		.call(
+			d3.axisTop(xScale).tickFormat((d, i) => {
+				let num = filteredOption[i][1].length;
+				let percentage = Math.round((num / 204) * 100 * 10) / 10;
+				return `${num} (${percentage}%)`;
+			})
+		)
+		.attr("transform", `translate(0, 60)`);
 
 	let thisQ = Object.keys(QandA)[index];
 
@@ -248,6 +285,4 @@ function drawNodes(data, index, options) {
 			node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 		});
 	}
-
-	// .call(drag(simulation));
 }
