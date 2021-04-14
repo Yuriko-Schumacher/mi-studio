@@ -67,6 +67,21 @@ a:hover {
 	transition: 0.4s;
 }
 
+h2 {
+	font-family: var(--grotzec);
+	display: inline;
+	margin-right: 20px;
+}
+
+img {
+	display: inline;
+}
+
+.title {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
 h4 {
 	margin: 0 auto;
 	width: 45ch;
@@ -75,7 +90,7 @@ h4 {
 
 .chart {
 	width: 90%;
-	margin: 0 auto;
+	margin: 5em auto;
 }
 
 .container {
@@ -88,18 +103,18 @@ h4 {
 	align-items: center;
 }
 
-#match-stock,
+/* #match-stock, */
 #survey {
 	width: 950px;
 	max-width: 1000px;
 	position: relative;
 }
 
-#each-survey {
+/* #each-survey {
 	height: 200px;
 	width: 600px;
 	position: relative;
-}
+} */
 
 #questions {
 	font-size: 10px;
