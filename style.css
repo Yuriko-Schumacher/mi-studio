@@ -165,20 +165,20 @@ article {
 	color: white;
 }
 
-#description {
+/* #description {
 	font-size: 12px;
 	width: 300px;
 	margin: 0 auto;
 	text-align: center;
-}
+} */
 
-.svg-container {
+/* .svg-container {
 	display: flex;
-}
+} */
 
-.legend {
+/* .legend {
 	font-size: 10px;
-}
+} */
 
 path.domain {
 	display: none;
@@ -188,7 +188,7 @@ path.domain {
 	display: none;
 }
 
-.accent-time {
+/* .accent-time {
 	font-size: 14px;
 	fill: red;
 }
@@ -211,4 +211,4 @@ path.domain {
 	color: gray;
 	text-align: right;
 	padding: 0 2em 0 0;
-}
+} */
