@@ -13,7 +13,7 @@ const containerG = svg.append("g").classed("container", true);
 
 let node;
 
-let questions = [
+const questions = [
 	"As the pandemic has gone on, have you experienced increased loneliness or other negative emotions?",
 	"How much has the pandemic impacted your desire to connect with other people?",
 	"When you feel lonely or experience other negative emotions, how important is it that people close to you acknowledge and recognize that feeling?",
@@ -33,7 +33,7 @@ let questions = [
 	// "Are you an introvert or an extrovert?",
 ];
 
-let QandA = {
+const QandA = {
 	increasedLoneliness: ["Yes, often", "Yes, sometimes", "No noticed change"],
 	desireToConnect: [
 		"Heavily increased",
@@ -153,23 +153,57 @@ let QandA = {
 	// ],
 	// personality: ["Introvert (less outgoing)", "Extrovert (more outgoing)"],
 };
+
+const colors = {
+	increasedLoneliness: ["#FC0594", "#ffc7e8", "#000000"],
+	desireToConnect: [
+		"#FC0594",
+		"#ffc7e8",
+		"#f7f7f7",
+		"#ADF5FF",
+		"#0C94E8",
+		"#ccc",
+	],
+	recognizeLoneliness: [
+		"#FC0594",
+		"#ffc7e8",
+		"#f7f7f7",
+		"#ADF5FF",
+		"#0C94E8",
+	],
+	abilityToBeHappy: [
+		"#FC0594",
+		"#ffc7e8",
+		"#f7f7f7",
+		"#ADF5FF",
+		"#0C94E8",
+		"#ccc",
+	],
+	healthConfirmationPrePandemic: [
+		"#FC0594",
+		"#ffc7e8",
+		"#f7f7f7",
+		"#ADF5FF",
+		"#ccc",
+	],
+	withoutProof: [
+		"#FC0594",
+		"#ffc7e8",
+		"#f7f7f7",
+		"#ADF5FF",
+		"#0C94E8",
+		"#ccc",
+	],
+};
+
 d3.csv("data/survey-cleaned.csv").then(function (data) {
 	console.log(data);
-	populateQuestions(data);
+	populateQuestions();
 
 	colorScale = d3
 		.scaleOrdinal()
 		.domain(selectQuestion(data, 0).map((el) => el[0]))
-		.range([
-			"#FC0594",
-			"#ffc7e8",
-			"black", // "#FF007F", // Rose
-			// "#FF007F", // Carnation Pink "#FFADD8"
-			// "#f7f7f7", // White
-			// "#0C94E8", // Celeste "#ADF5FF"
-			// "#0C94E8", // Sky Blue Crayola
-			// "#ccc",
-		]);
+		.range(colors.increasedLoneliness);
 
 	changeViz(data, 0);
 	d3.select("#questions")
@@ -189,14 +223,23 @@ d3.csv("data/survey-cleaned.csv").then(function (data) {
 			xAxis2.remove();
 			changeViz(data, questionIndex);
 		});
+
+	d3.select("#setColor").on("click", function () {
+		let lockedQuestion = d3.select(".question-active").nodes()[0]
+			.textContent;
+		let lockedIndex = questions.findIndex((el) => el === lockedQuestion);
+		console.log(lockedIndex);
+		changeColor(data, lockedIndex);
+	});
 });
 
 function changeViz(data, index) {
 	addQuestion(index);
-	drawNodes(data, index, selectQuestion(data, index));
+	let options = selectQuestion(data, index);
+	drawNodes(data, index, options);
 }
 
-function populateQuestions(data) {
+function populateQuestions() {
 	questions.forEach((question) => {
 		d3.select("#questions")
 			.append("li")
@@ -221,13 +264,23 @@ function selectQuestion(data, index) {
 	return options;
 }
 
-function drawNodes(data, index, options) {
-	// create scale
-	let filteredOption = options.filter((el) => el.length >= 2);
+function changeColor(data, index) {
+	let thisQ = Object.keys(QandA)[index];
+	console.log(colors[thisQ]);
+	colorScale = d3
+		.scaleOrdinal()
+		.domain(selectQuestion(data, index).map((el) => el[0]))
+		.range(colors[thisQ]);
+	node.attr("fill", (d) => colorScale(d[thisQ]));
+}
 
+function drawNodes(data, index, options) {
+	let thisQ = Object.keys(QandA)[index];
+
+	// create scale
 	xScale = d3
 		.scaleBand()
-		.domain(filteredOption.map((el) => el[0]))
+		.domain(options.map((el) => el[0]))
 		.range([margin.left, width - margin.right]);
 
 	xAxis = containerG
@@ -241,14 +294,12 @@ function drawNodes(data, index, options) {
 		.classed("x-axis", true)
 		.call(
 			d3.axisBottom(xScale).tickFormat((d, i) => {
-				let num = filteredOption[i][1].length;
+				let num = options[i][1].length;
 				let percentage = Math.round((num / 204) * 100 * 10) / 10;
 				return `${num} (${percentage}%)`;
 			})
 		)
 		.attr("transform", `translate(0, ${height - 30})`);
-
-	let thisQ = Object.keys(QandA)[index];
 
 	let simulation = d3
 		.forceSimulation(data)
@@ -257,9 +308,7 @@ function drawNodes(data, index, options) {
 		.force("charge", d3.forceManyBody().strength(0.3))
 		.force(
 			"x",
-			d3
-				.forceX()
-				.x((d) => xScale(d[thisQ]) - filteredOption.length * 28 + 250)
+			d3.forceX().x((d) => xScale(d[thisQ]) - options.length * 28 + 250)
 		)
 		.force("y", d3.forceY().y(height / 2));
 
@@ -272,14 +321,9 @@ function drawNodes(data, index, options) {
 			.data(data, (d) => d.index)
 			.enter()
 			.append("circle")
-			.attr("class", (d) =>
-				QandA.increasedLoneliness.findIndex(
-					(q) => q === d.increasedLoneliness
-				)
-			)
 			.attr("yy", (d) => d[thisQ])
 			.attr("r", 5)
-			.attr("fill", (d) => colorScale(d.increasedLoneliness));
+			.attr("fill", (d) => colorScale(d[thisQ]));
 
 		simulation.on("tick", () => {
 			node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
@@ -290,3 +334,18 @@ function drawNodes(data, index, options) {
 		});
 	}
 }
+
+// -------------------- TIMELINE CHART ---------------------
+
+// d3.csv("data/bodycam-merged.csv", function (d) {
+// 	d.parsedTime = parseTime(d.timeToPerse);
+// 	d.vidId = d.src.slice(19, 21);
+// 	return d;
+// }).then(function (data) {
+// 	console.log(data);
+// 	bodycamData = data;
+// 	let timeline = new Timeline();
+// 	timeline.selection(containerG).size(size).margins(margin).data(data);
+// 	// console.log(data);
+// 	timeline.draw();
+// });
