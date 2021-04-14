@@ -325,6 +325,7 @@ survey <- survey.raw %>%
          physicalIntimacyMatching = physical.intimacy.matching,
          healthMandates = health.mandates,
          virtualOrF2f = virtual.or.f2f)
+survey[is.na(survey)] <- "NA"
 write_csv(survey, "data/survey-cleaned.csv")
 
 survey %>% 

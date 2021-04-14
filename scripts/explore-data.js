@@ -1,7 +1,7 @@
 // ---------- DATA VIZ ----------
 const width = document.querySelector("#survey").clientWidth;
 const height = document.querySelector("#survey").clientHeight;
-const margin = { top: 25, right: 25, bottom: 75, left: 75 };
+const margin = { top: 0, right: 0, bottom: 75, left: 0 };
 const svg = d3
 	.select("#survey")
 	.append("svg")
@@ -14,8 +14,8 @@ const containerG = svg.append("g").classed("container", true);
 let node;
 
 let questions = [
-	"How much has the pandemic impacted your desire to connect with other people?",
 	"As the pandemic has gone on, have you experienced increased loneliness or other negative emotions?",
+	"How much has the pandemic impacted your desire to connect with other people?",
 	"When you feel lonely or experience other negative emotions, how important is it that people close to you acknowledge and recognize that feeling?",
 	"As the pandemic has gone on, how has it impacted your ability to be comfortable or happy while alone?",
 	"If you hadn't been using dating applications before the pandemic, how long did it take for you to begin using one when the pandemic hit?",
@@ -27,21 +27,22 @@ let questions = [
 	"Before the pandemic, when you were in a relationship, how important was physical intimacy to you?",
 	"If a potential match expresses a strong need for physical intimacy on their profile, how likely are you to try to match with them?",
 	"When deciding on a date with a new match, do you prefer a virtual date or an in person date?",
-	"How old are you?",
-	"How would you describe your ethnic background?",
-	"What is your sexual orientation?",
-	"Are you an introvert or an extrovert?",
+	// "How old are you?",
+	// "How would you describe your ethnic background?",
+	// "What is your sexual orientation?",
+	// "Are you an introvert or an extrovert?",
 ];
 
 let QandA = {
+	increasedLoneliness: ["Yes, often", "Yes, sometimes", "No noticed change"],
 	desireToConnect: [
 		"Heavily increased",
 		"Moderately increased",
 		"Not at all",
 		"Moderately decreased",
 		"Heavily decreased",
+		"NA",
 	],
-	increasedLoneliness: ["Yes, often", "Yes, sometimes", "No noticed change"],
 	recognizeLoneliness: [
 		"Very Important",
 		"Somewhat Important",
@@ -55,6 +56,7 @@ let QandA = {
 		"No noted difference",
 		"Somewhat increased my ability",
 		"Significantly increased my ability",
+		"NA",
 	],
 	timeToUseApp: [
 		"1-2 weeks",
@@ -62,6 +64,7 @@ let QandA = {
 		"1-3 months",
 		"4-6 months",
 		"7-9 months",
+		"NA",
 	],
 	frequencyOfUseage: [
 		"Much more often",
@@ -69,12 +72,14 @@ let QandA = {
 		"Used same amount",
 		"Somewhat less often",
 		"Much less often",
+		"NA",
 	],
 	dealBreaking: [
 		"Very likely",
 		"Somewhat likely",
 		"Somewhat unlikely",
 		"Very unlikely",
+		"NA",
 	],
 	matchingAttitudes: [
 		"Very particular",
@@ -82,6 +87,7 @@ let QandA = {
 		"Moderate",
 		"Somewhat easy going",
 		"Very easy going",
+		"NA",
 	],
 	healthConfirmationPrePandemic: [
 		"Very Important",
@@ -89,6 +95,7 @@ let QandA = {
 		"Important",
 		"Somewhat Unimportant",
 		"Very Unimportant",
+		"NA",
 	],
 	withoutProof: [
 		"Very Likely",
@@ -96,6 +103,7 @@ let QandA = {
 		"Likely",
 		"Somewhat Unlikely",
 		"Very Unlikely",
+		"NA",
 	],
 	physicalIntimacyPrePandemic: [
 		"Very Important",
@@ -103,6 +111,7 @@ let QandA = {
 		"Important",
 		"Somewhat Unimportant",
 		"Very Unimportant",
+		"NA",
 	],
 	physicalIntimacyMatching: [
 		"Very Likely",
@@ -110,30 +119,39 @@ let QandA = {
 		"Likely",
 		"Somewhat Unlikely",
 		"Very Unlikely",
+		"NA",
 	],
 	virtualOrF2f: [
 		"I prefer a virtual date",
 		"I prefer an in person date",
 		"It depends on my match",
+		"NA",
 	],
-	age: ["18-21", "22-26", "27-29"],
-	ethnisity: [
-		"White",
-		"Black",
-		"Asian",
-		"East Asian",
-		"South Asian",
-		"Spanish",
-		"Hispanic",
-		"Islander",
-		"Pacific Islander",
-		"Middle Eastern",
-		"African",
-		"South American",
-		"Other",
-	],
-	sexuality: ["Heterosexual", "Homosexual", "Bisexual", "Pansexual", "Other"],
-	personality: ["Introvert (less outgoing)", "Extrovert (more outgoing)"],
+	// age: ["18-21", "22-26", "27-29"],
+	// ethnisity: [
+	// 	"White",
+	// 	"Black",
+	// 	"Asian",
+	// 	"East Asian",
+	// 	"South Asian",
+	// 	"Spanish",
+	// 	"Hispanic",
+	// 	"Islander",
+	// 	"Pacific Islander",
+	// 	"Middle Eastern",
+	// 	"African",
+	// 	"South American",
+	// 	"Other",
+	// ],
+	// sexuality: [
+	// 	"Heterosexual",
+	// 	"Homosexual",
+	// 	"Bisexual",
+	// 	"Pansexual",
+	// 	"Other",
+	// 	"NA",
+	// ],
+	// personality: ["Introvert (less outgoing)", "Extrovert (more outgoing)"],
 };
 d3.csv("data/survey-cleaned.csv").then(function (data) {
 	console.log(data);
@@ -143,12 +161,14 @@ d3.csv("data/survey-cleaned.csv").then(function (data) {
 		.scaleOrdinal()
 		.domain(selectQuestion(data, 0).map((el) => el[0]))
 		.range([
-			"#FF007F", // Rose
-			"#FFADD8", // Carnation Pink
-			"#f7f7f7", // White
-			"#ADF5FF", // Celeste
-			"#0C94E8", // Sky Blue Crayola
-			"#ccc",
+			"#FC0594",
+			"#ffc7e8",
+			"black", // "#FF007F", // Rose
+			// "#FF007F", // Carnation Pink "#FFADD8"
+			// "#f7f7f7", // White
+			// "#0C94E8", // Celeste "#ADF5FF"
+			// "#0C94E8", // Sky Blue Crayola
+			// "#ccc",
 		]);
 
 	changeViz(data, 0);
@@ -198,29 +218,12 @@ function selectQuestion(data, index) {
 		return choices.indexOf(a[0]) > choices.indexOf(b[0]) ? 1 : -1;
 	});
 
-	// // add default option to the actual answers
-	let options2 = options.map((el) => el[0]);
-	let options3 = options2.filter((el) => el !== "NA");
-	let missingOption = choices.filter((i) => options3.indexOf(i) == -1);
-	if (missingOption.length > 0) {
-		options.push(missingOption);
-	}
-
-	// sort again
-	if (options.length > choices.length) {
-		choices.push("NA");
-	}
-	options.sort((a, b) => {
-		return choices.indexOf(a[0]) > choices.indexOf(b[0]) ? 1 : -1;
-	});
-
 	return options;
 }
 
 function drawNodes(data, index, options) {
 	// create scale
 	let filteredOption = options.filter((el) => el.length >= 2);
-	console.log(filteredOption.map((el) => el[1].length));
 
 	xScale = d3
 		.scaleBand()
@@ -231,26 +234,23 @@ function drawNodes(data, index, options) {
 		.append("g")
 		.classed("x-axis", true)
 		.call(d3.axisBottom(xScale))
-		.attr("transform", `translate(0, ${height - margin.bottom + 10})`);
-
-	// let xScale2 = d3
-	// 	.scaleBand()
-	// 	.domain(filteredOption.map((el) => String(el[1].length)))
-	// 	.range([margin.left, width - margin.right]);
+		.attr("transform", `translate(0, ${height - 20})`);
 
 	xAxis2 = containerG
 		.append("g")
 		.classed("x-axis", true)
 		.call(
-			d3.axisTop(xScale).tickFormat((d, i) => {
+			d3.axisBottom(xScale).tickFormat((d, i) => {
 				let num = filteredOption[i][1].length;
 				let percentage = Math.round((num / 204) * 100 * 10) / 10;
 				return `${num} (${percentage}%)`;
 			})
 		)
-		.attr("transform", `translate(0, 60)`);
+		.attr("transform", `translate(0, ${height - 30})`);
 
 	let thisQ = Object.keys(QandA)[index];
+	console.log(filteredOption);
+	console.log(-filteredOption.length * 30 + 240);
 
 	let simulation = d3
 		.forceSimulation(data)
@@ -259,23 +259,29 @@ function drawNodes(data, index, options) {
 		.force("charge", d3.forceManyBody().strength(0.3))
 		.force(
 			"x",
-			d3.forceX().x((d) => xScale(d[thisQ]))
+			d3
+				.forceX()
+				.x((d) => xScale(d[thisQ]) - filteredOption.length * 28 + 250)
 		)
 		.force("y", d3.forceY().y(height / 2));
 
 	if (typeof node === "undefined") {
 		node = svg
 			.append("g")
-			.attr("transform", `translate(${margin.left}, 0)`)
 			.attr("stroke", "lightgray")
 			.attr("stroke-width", 1)
 			.selectAll("circle")
 			.data(data, (d) => d.index)
 			.enter()
 			.append("circle")
+			.attr("class", (d) =>
+				QandA.increasedLoneliness.findIndex(
+					(q) => q === d.increasedLoneliness
+				)
+			)
 			.attr("yy", (d) => d[thisQ])
 			.attr("r", 5)
-			.attr("fill", (d) => colorScale(d.desireToConnect));
+			.attr("fill", (d) => colorScale(d.increasedLoneliness));
 
 		simulation.on("tick", () => {
 			node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);

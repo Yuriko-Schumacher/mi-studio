@@ -1,3 +1,47 @@
+/* ----------------------  LOAD FONTS FROM SERVER ------------------------------ */
+
+@font-face {
+	font-family: "GrotzecCond-Demibold";
+	src: url(https://mediainnovation.camd.northeastern.edu/2021/loveinthetimeofcovid/fonts/GrotzecCond-Demibold3.woff2);
+}
+
+@font-face {
+	font-family: "GrotzecCond-DemiboldItalic";
+	src: url(https://mediainnovation.camd.northeastern.edu/2021/loveinthetimeofcovid/fonts/GrotzecCond-DemiboldItalic.woff2);
+}
+
+@font-face {
+	font-family: "LeJeunePoster-Regular";
+	src: url(https://mediainnovation.camd.northeastern.edu/2021/loveinthetimeofcovid/fonts/LeJeunePoster-Regular.otf);
+}
+
+@font-face {
+	font-family: "LeJeunePoster-RegularItalic";
+	src: url(https://mediainnovation.camd.northeastern.edu/2021/loveinthetimeofcovid/fonts/LeJeunePoster-RegularItalic.otf);
+}
+
+@import url("https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+/* ----- SET COLOR VARIABLES ----- */
+
+:root {
+	--yellow: #fed527;
+	--dark-yellow: #b3940d;
+	--navy: #0001b3;
+	--dark-navy: #000066;
+	--pink: #ff0dd9;
+	--dark-pink: #b31299;
+	--font-main: #3e3d3d;
+	--font-sub: #747272;
+	--background-gray: #edebeb;
+	--serif: "PT Serif", serif;
+	--sans-serif: "PT Sans", sans-serif;
+	--grotzec: "GrotzecCond-Demibold";
+	--grotzec-italic: "GrotzecCond-DemiboldItalic";
+	--lejeune: "LeJeunePoster-Regular";
+	--lejeune-italic: "LeJeunePoster-RegularItalic";
+}
+
 @import url("https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;900&family=Overpass:ital,wght@0,300;0,700;1,400&display=swap");
 
 * {
@@ -8,7 +52,7 @@ html,
 body {
 	margin: 0px;
 	padding: 0px;
-	font-family: "Overpass", sans-serif;
+	font-family: var(--sans-serif);
 	font-size: 18px;
 	color: #303030;
 }
@@ -22,7 +66,6 @@ h4 {
 .chart {
 	width: 90%;
 	margin: 0 auto;
-	font-family: var(--sans-serif);
 }
 
 .container {
@@ -33,9 +76,15 @@ h4 {
 
 #match-stock,
 #survey {
-	height: 300px;
+	height: 200px;
 	width: 950px;
 	max-width: 1000px;
+	position: relative;
+}
+
+#each-survey {
+	height: 200px;
+	width: 600px;
 	position: relative;
 }
 
@@ -54,6 +103,27 @@ h4 {
 .question-active {
 	font-weight: bold;
 	color: black;
+}
+
+#question {
+	width: 350px;
+	font-size: 16px;
+	line-height: 1;
+}
+
+#description {
+	font-size: 12px;
+	width: 300px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.svg-container {
+	display: flex;
+}
+
+.legend {
+	font-size: 10px;
 }
 
 path.domain {
