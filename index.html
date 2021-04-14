@@ -5,13 +5,54 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>MI Studio Team 3</title>
+		<link
+			rel="stylesheet"
+			type="text/css"
+			href="https://mediainnovation.camd.northeastern.edu/2021/loveinthetimeofcovid/css/loveinthetimeofcovid.css"
+		/>
 		<link rel="stylesheet" href="style.css" />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.5.0/d3.min.js"></script>
 	</head>
 	<body>
+		<!-- ---------- NAV BAR ---------- -->
+		<div class="nav">
+			<nav role="navigation" class="essential-nav">
+				<div id="menuToggle">
+					<!--
+        A fake / hidden checkbox is used as click reciever,
+        so you can use the :checked selector on it.
+        -->
+					<input type="checkbox" />
+					<!--
+        Some spans to act as a hamburger.
+        -->
+					<span></span>
+					<span></span>
+					<span></span>
+					<ul id="menu">
+						<a href="swipes-over-swabs/index.html"
+							><li>Swipes Over Swabs</li></a
+						>
+						<a href="pregnancy-during-the-pandemic/index.html"
+							><li>Pregnancy During the Pandemic</li></a
+						>
+						<a href="love-during-the-loneliness-virus/index.html"
+							><li>Love During the "Loneliness Virus"</li></a
+						>
+					</ul>
+				</div>
+				<a href="../index.html">
+					<div
+						style="
+							width: 50%;
+							margin: -20px auto 0 auto;
+							height: 50px;
+						"
+					></div>
+				</a>
+			</nav>
+		</div>
 		<div class="chart">
-			<h3>Survey results</h3>
-
 			<!-- ---------- SPECIFIC VISUALIZATIONS INSIDE THE FLOW ---------- -->
 
 			<!-- <div class="container">
@@ -30,6 +71,30 @@
 			</div> -->
 
 			<!-- ---------- EXPLORE DATA PAGE ---------- -->
+			<div id="intro">
+				<h3>Explore survey results</h3>
+				<article>
+					<p>
+						In a survey of 204 people between the ages of 18 and 29,
+						64% reported dealing with negative emotions more often
+						than they had prior to the pandemic.
+					</p>
+					<p>
+						Click questions on the right to see what those people
+						answered to the other questions.
+					</p>
+					<p>
+						Colors will stay the same,
+						<span class="hot-pink">Hot pink circles</span> indicate
+						131 people who said they have often experienced
+						increased loneliness as the pandemic has gone on.
+						<span class="pink">Pink circles</span> are people who
+						answered "Yes, sometimes", and
+						<span class="black">Black circles</span> are the five
+						people who chose "No noticed change" for the question.
+					</p>
+				</article>
+			</div>
 			<div class="container">
 				<div id="survey">
 					<h4 id="question"></h4>
@@ -37,6 +102,27 @@
 				<div>
 					<ul id="questions"></ul>
 				</div>
+			</div>
+			<div id="outro">
+				<article>
+					<p>
+						This survey was
+						<a
+							href="https://docs.google.com/forms/d/e/1FAIpQLSe1JX6OjDP1WRwbWnmH2WnXMprLf7roHSly1kkrYHULDQ2QGQ/viewform"
+							target="_blank"
+							>conducted online through Google forms</a
+						>
+						in February and March in 2021. About 70% (141 people) of
+						the respondents are between the ages of 22 to 26, while
+						27.5% (56 people) are from 18 to 21. Most participants
+						(166 people, 81.4%) answered they are white, followed by
+						Hispanic (8 people, 3.9%). For a question about their
+						sexual orientation, 71.9% (146 people) answered
+						Heterosexual, with 21.2% (43 people) saying they were
+						Bisexual. About half of the respondents (104 people,
+						51%) said they are introvert.
+					</p>
+				</article>
 			</div>
 
 			<!-- ---------- MATCH GROUP STOCK ---------- -->
@@ -52,6 +138,28 @@
 				>
 			</div> -->
 		</div>
+		<!-- ------------------------------Footer -------------------------------- -->
+		<p
+			style="
+				text-align: center;
+				padding: 30px 0;
+				font-family: 'Helvetica';
+			"
+		>
+			Produced by students of the Media Innovation masters' program at the
+			<a
+				href="https://camd.northeastern.edu/journalism-at-northeastern/"
+				style="text-decoration: underline"
+				>Northeastern University School of Journalism.</a
+			>
+			&#169; 2021
+		</p>
+		<h5 style="border-top: none; margin-top: -2%; text-align: center">
+			<img
+				src="https://mediainnovation.camd.northeastern.edu/2021/loveinthetimeofcovid/images/seal_logotype-768x252.png"
+				width="300px"
+			/>
+		</h5>
 		<script src="scripts/explore-data.js"></script>
 		<!-- <script src="scripts/each-survey.js"></script> -->
 	</body>

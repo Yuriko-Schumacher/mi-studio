@@ -1,6 +1,6 @@
 // ---------- DATA VIZ ----------
-const width = document.querySelector("#survey").clientWidth;
-const height = document.querySelector("#survey").clientHeight;
+const width = 950;
+const height = 200;
 const margin = { top: 0, right: 0, bottom: 75, left: 0 };
 const svg = d3
 	.select("#survey")
@@ -249,8 +249,6 @@ function drawNodes(data, index, options) {
 		.attr("transform", `translate(0, ${height - 30})`);
 
 	let thisQ = Object.keys(QandA)[index];
-	console.log(filteredOption);
-	console.log(-filteredOption.length * 30 + 240);
 
 	let simulation = d3
 		.forceSimulation(data)

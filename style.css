@@ -57,6 +57,16 @@ body {
 	color: #303030;
 }
 
+a:link,
+a:visited {
+	color: #fc0594;
+}
+
+a:hover {
+	color: #ffc7e8;
+	transition: 0.4s;
+}
+
 h4 {
 	margin: 0 auto;
 	width: 45ch;
@@ -69,6 +79,10 @@ h4 {
 }
 
 .container {
+	height: 450px;
+	max-width: 1280px;
+	margin: 3em auto;
+	background: rgba(211, 211, 211, 0.2);
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -76,7 +90,6 @@ h4 {
 
 #match-stock,
 #survey {
-	height: 200px;
 	width: 950px;
 	max-width: 1000px;
 	position: relative;
@@ -93,6 +106,7 @@ h4 {
 	color: rgb(147, 147, 147);
 	line-height: 1;
 	margin: 0;
+	padding: 0 3em 0 0;
 }
 
 #questions > li {
@@ -109,6 +123,31 @@ h4 {
 	width: 350px;
 	font-size: 16px;
 	line-height: 1;
+}
+
+#intro,
+#outro {
+	width: 80%;
+	max-width: 700px;
+	margin: 0 auto;
+}
+
+article {
+	font-size: 14px;
+}
+
+.hot-pink {
+	background: #fc0594;
+	color: white;
+}
+
+.pink {
+	background: #ffc7e8;
+}
+
+.black {
+	background: black;
+	color: white;
 }
 
 #description {
