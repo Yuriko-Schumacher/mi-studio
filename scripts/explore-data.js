@@ -17,7 +17,7 @@ const legendSvg = d3
 	.append("svg")
 	.attr("id", "legendSvg")
 	.attr("width", width)
-	.attr("height", 90);
+	.attr("height", 30);
 
 const containerG = svg.append("g").classed("container", true);
 const legendsG = legendSvg.append("g").classed("legend-container", true);
