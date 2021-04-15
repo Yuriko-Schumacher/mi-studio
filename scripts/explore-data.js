@@ -8,22 +8,33 @@ const svg = d3
 	.attr("id", "surveySvg")
 	.attr("width", width)
 	.attr("height", height);
+const legendDescription = d3
+	.select("#survey")
+	.append("g")
+	.classed("color-description", true);
+const legendSvg = d3
+	.select("#survey")
+	.append("svg")
+	.attr("id", "legendSvg")
+	.attr("width", width)
+	.attr("height", 90);
 
 const containerG = svg.append("g").classed("container", true);
+const legendsG = legendSvg.append("g").classed("legend-container", true);
 
 let node;
 
 const questions = [
-	"As the pandemic has gone on, have you experienced increased loneliness or other negative emotions?",
+	"Have you experienced increased loneliness during the pandemic?",
 	"How much has the pandemic impacted your desire to connect with other people?",
-	"When you feel lonely or experience other negative emotions, how important is it that people close to you acknowledge and recognize that feeling?",
-	"As the pandemic has gone on, how has it impacted your ability to be comfortable or happy while alone?",
+	"When you feel lonely, how important is it that people acknowledge that feeling?",
+	"How has it impacted your ability to be comfortable or happy while alone?",
 	// "If you hadn't been using dating applications before the pandemic, how long did it take for you to begin using one when the pandemic hit?",
 	// "If you had been using dating applications before the pandemic, did you begin using them more regularly? How much more?",
 	// "Before the pandemic, how likely were you to overlook potential “deal breaking” aspects of a match for any reason? (attractiveness, personality quirks, job status, etc)?",
 	// "As the pandemic continues, how would you describe yourself when deciding if you want to match with someone?",
-	"Before the pandemic, how important was it for you to know that your match was healthy? (STI Free, Communicable Disease Free, etc)",
-	"How likely are you to trust a match who assures you that they are healthy without providing proof of a negative COVID test result?",
+	"Before the pandemic, how important was it to know that your match was healthy? (STI Free, etc.)",
+	"How likely are you to trust a match who assures healthy without providing proof of a negative COVID test result?",
 	// "Before the pandemic, when you were in a relationship, how important was physical intimacy to you?",
 	// "If a potential match expresses a strong need for physical intimacy on their profile, how likely are you to try to match with them?",
 	// "When deciding on a date with a new match, do you prefer a virtual date or an in person date?",
@@ -199,6 +210,7 @@ const colors = {
 d3.csv("data/survey-cleaned.csv").then(function (data) {
 	console.log(data);
 	populateQuestions();
+	changeColorDescription(0);
 
 	colorScale = d3
 		.scaleOrdinal()
@@ -206,6 +218,8 @@ d3.csv("data/survey-cleaned.csv").then(function (data) {
 		.range(colors.increasedLoneliness);
 
 	changeViz(data, 0);
+	changeLegend(0);
+
 	d3.select("#questions")
 		.select(".question")
 		.classed("question-active", true);
@@ -228,8 +242,9 @@ d3.csv("data/survey-cleaned.csv").then(function (data) {
 		let lockedQuestion = d3.select(".question-active").nodes()[0]
 			.textContent;
 		let lockedIndex = questions.findIndex((el) => el === lockedQuestion);
-		console.log(lockedIndex);
 		changeColor(data, lockedIndex);
+		changeColorDescription(lockedIndex);
+		changeLegend(lockedIndex);
 	});
 });
 
@@ -272,6 +287,42 @@ function changeColor(data, index) {
 		.domain(selectQuestion(data, index).map((el) => el[0]))
 		.range(colors[thisQ]);
 	node.attr("fill", (d) => colorScale(d[thisQ]));
+	changeColorDescription(index);
+}
+
+function changeColorDescription(index) {
+	d3.select(".color-description").select("p").remove();
+	legendDescription
+		.append("p")
+		.html(
+			`Colors are set based on the question: "<b>${questions[index]}</b>"`
+		);
+}
+
+function changeLegend(index) {
+	legendsG.selectAll(".color-legendG").remove();
+	let thisQ = Object.keys(QandA)[index];
+	colors[thisQ].forEach((color, i) => {
+		let legendG = legendsG.append("g").classed("color-legendG", true);
+		legendG
+			.append("circle")
+			.attr("cx", i * 170)
+			.attr("cy", 20)
+			.attr("r", 5)
+			.attr("fill", color)
+			.attr("stroke", "lightgray")
+			.attr("stroke-widht", 1);
+		legendG
+			.append("text")
+			.classed("color-legend", true)
+			.attr("transform", `translate(${i * 170 + 10}, 23)`)
+			.text(QandA[thisQ][i]);
+	});
+	let legendWidth = document
+		.querySelector(".legend-container")
+		.getBoundingClientRect().width;
+	let xToMove = width / 2 - legendWidth / 2;
+	legendsG.attr("transform", `translate(${xToMove}, 0)`);
 }
 
 function drawNodes(data, index, options) {
@@ -334,18 +385,3 @@ function drawNodes(data, index, options) {
 		});
 	}
 }
-
-// -------------------- TIMELINE CHART ---------------------
-
-// d3.csv("data/bodycam-merged.csv", function (d) {
-// 	d.parsedTime = parseTime(d.timeToPerse);
-// 	d.vidId = d.src.slice(19, 21);
-// 	return d;
-// }).then(function (data) {
-// 	console.log(data);
-// 	bodycamData = data;
-// 	let timeline = new Timeline();
-// 	timeline.selection(containerG).size(size).margins(margin).data(data);
-// 	// console.log(data);
-// 	timeline.draw();
-// });

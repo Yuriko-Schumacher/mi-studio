@@ -140,6 +140,22 @@ h4 {
 	line-height: 1;
 }
 
+.color-description > p {
+	margin: 3em auto 0;
+	width: 450px;
+	font-size: 14px;
+	text-align: center;
+	line-height: 1;
+}
+
+.legend-container {
+	margin: 0 auto;
+}
+
+.color-legend {
+	font-size: 12px;
+}
+
 #intro,
 #outro {
 	width: 80%;
