@@ -28,7 +28,7 @@ const questions = [
 	"Have you experienced increased loneliness during the pandemic?",
 	"How much has the pandemic impacted your desire to connect with other people?",
 	"When you feel lonely, how important is it that people acknowledge that feeling?",
-	"How has it impacted your ability to be comfortable or happy while alone?",
+	"How has the impacted your ability to be happy while alone?",
 	// "If you hadn't been using dating applications before the pandemic, how long did it take for you to begin using one when the pandemic hit?",
 	// "If you had been using dating applications before the pandemic, did you begin using them more regularly? How much more?",
 	// "Before the pandemic, how likely were you to overlook potential “deal breaking” aspects of a match for any reason? (attractiveness, personality quirks, job status, etc)?",
