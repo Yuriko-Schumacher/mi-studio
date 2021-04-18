@@ -28,7 +28,7 @@ const questions = [
 	"Have you experienced increased loneliness during the pandemic?",
 	"How much has the pandemic impacted your desire to connect with other people?",
 	"When you feel lonely, how important is it that people acknowledge that feeling?",
-	"How has the impacted your ability to be happy while alone?",
+	"How has the pandemic impacted your ability to be happy while alone?",
 	// "If you hadn't been using dating applications before the pandemic, how long did it take for you to begin using one when the pandemic hit?",
 	// "If you had been using dating applications before the pandemic, did you begin using them more regularly? How much more?",
 	// "Before the pandemic, how likely were you to overlook potential “deal breaking” aspects of a match for any reason? (attractiveness, personality quirks, job status, etc)?",
@@ -169,40 +169,40 @@ const colors = {
 	increasedLoneliness: ["#FC0594", "#ffc7e8", "#000000"],
 	desireToConnect: [
 		"#FC0594",
-		"#ffc7e8",
+		"#FC0594", // "#ffc7e8"
 		"#f7f7f7",
-		"#ADF5FF",
-		"#0C94E8",
+		"black", // "#ADF5FF"
+		"black", // "#0C94E8"
 		"#ccc",
 	],
 	recognizeLoneliness: [
 		"#FC0594",
-		"#ffc7e8",
+		"#FC0594", // "#ffc7e8"
 		"#f7f7f7",
-		"#ADF5FF",
-		"#0C94E8",
+		"black", // "#ADF5FF"
+		"black", // "#0C94E8"
 	],
 	abilityToBeHappy: [
-		"#FC0594",
-		"#ffc7e8",
+		"black", // "#FC0594",
+		"black", // "#ffc7e8",
 		"#f7f7f7",
-		"#ADF5FF",
-		"#0C94E8",
+		"#FC0594", // "#ADF5FF",
+		"#FC0594", // "#0C94E8",
 		"#ccc",
 	],
 	healthConfirmationPrePandemic: [
 		"#FC0594",
 		"#ffc7e8",
-		"#f7f7f7",
-		"#ADF5FF",
+		"#ffc7e8", // "#f7f7f7",
+		"black", // "#ADF5FF",
 		"#ccc",
 	],
 	withoutProof: [
 		"#FC0594",
-		"#ffc7e8",
-		"#f7f7f7",
-		"#ADF5FF",
-		"#0C94E8",
+		"#FC0594", // "#ffc7e8",
+		"#FC0594", //"#f7f7f7",
+		"black", // "#ADF5FF",
+		"black", // "#0C94E8",
 		"#ccc",
 	],
 };
