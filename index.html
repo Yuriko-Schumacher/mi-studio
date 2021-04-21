@@ -12,6 +12,7 @@
 		/>
 		<link rel="stylesheet" href="style.css" />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.5.0/d3.min.js"></script>
+		<script src="https://unpkg.com/enter-view"></script>
 	</head>
 	<body>
 		<!-- ---------- NAV BAR ---------- -->
@@ -78,7 +79,7 @@
 					<h2>Explore survey results</h2>
 				</div>
 				<article>
-					<p>
+					<!-- <p>
 						In a survey of 204 people between the ages of 18 and 29,
 						64% reported dealing with negative emotions more often
 						than they had prior to the pandemic.
@@ -87,7 +88,7 @@
 						"NA" indicates "No answer". Click questions on the right
 						to see what those people answered to the other
 						questions.
-					</p>
+					</p> -->
 					<!-- <p>
 						Each color represents a survey participant who indicated
 						they experienced a specific degree of loneliness.
@@ -100,7 +101,7 @@
 					</p> -->
 				</article>
 			</div>
-			<div class="container">
+			<!-- <div class="container">
 				<div id="survey">
 					<h4 id="question"></h4>
 				</div>
@@ -109,8 +110,80 @@
 					<ul id="questions"></ul>
 					<button id="setColor">Set colors on this question</button>
 				</div>
+			</div> -->
+			<div id="survey__loneliness">
+				<div id="chart__1__container" class="chart__container">
+					<!-- sticky graphic -->
+					<figure id="chart__1" class="chart__figure">
+						<div id="question__loneliness" class="question">
+							<p></p>
+						</div>
+					</figure>
+
+					<!-- step text -->
+					<article id="chart__1__article" class="chart__article">
+						<div id="step__0" class="step" data-index="0">
+							<p>
+								In a survey of 204 people between the ages of 18
+								and 29,
+								<span class="hotpink-highlighter">64%</span>
+								reported dealing with negative emotions more
+								often than they had prior to the pandemic.
+							</p>
+							<p>
+								<span class="pink-highlighter">Almost all</span>
+								said they have experienced increased loneliness
+								as the pandemic has gone on.
+							</p>
+						</div>
+						<div id="step__1" class="step" data-index="1">
+							<p>
+								<span class="hotpink-highlighter"
+									>145 people (71.0%)</span
+								>
+								said that their desire to connect with people
+								had increased over the course of the pandemic.
+							</p>
+						</div>
+					</article>
+				</div>
 			</div>
-			<div id="outro">
+			<div id="survey__risk">
+				<div id="chart__2__container" class="chart__container">
+					<!-- sticky graphic -->
+					<figure id="chart__2" class="chart__figure">
+						<div id="question__risk" class="question">
+							<p></p>
+						</div>
+					</figure>
+
+					<div class="devide"></div>
+
+					<!-- step text -->
+					<article id="chart__2__article" class="chart__article">
+						<div id="step__2" class="step" data-index="2">
+							<p>
+								Before the pandemic,
+								<span class="hotpink-highlighter">63%</span>
+								of respondents said that it was very important
+								that they knew a potential match was STI-free.
+							</p>
+						</div>
+						<div id="step__3" class="step" data-index="3">
+							<p>
+								By comparison,
+								<span class="hotpink-highlighter"
+									>almost 55% (111 in total)</span
+								>
+								of respondents said that they would take
+								someone’s word about being COVID free.
+							</p>
+						</div>
+					</article>
+				</div>
+			</div>
+
+			<!-- <div id="outro">
 				<article>
 					<p>
 						This survey was
@@ -133,7 +206,7 @@
 					</p>
 					<h2>Go back to main story<a href=""> >>>></a></h2>
 				</article>
-			</div>
+			</div> -->
 
 			<!-- ---------- MATCH GROUP STOCK ---------- -->
 			<!-- <h3>Match Group's stock price (Feb 2018 ~ Feb 2021)</h3>
@@ -170,7 +243,9 @@
 				width="300px"
 			/>
 		</h5>
-		<script src="scripts/explore-data.js"></script>
+		<script src="scripts/bubbleChart.js"></script>
+		<script src="scripts/explore-data-new.js"></script>
+		<!-- <script src="scripts/explore-data.js"></script> -->
 		<!-- <script src="scripts/each-survey.js"></script> -->
 	</body>
 </html>

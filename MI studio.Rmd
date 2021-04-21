@@ -324,9 +324,31 @@ survey <- survey.raw %>%
          physicalIntimacyPrePandemic = `physical.intimacy.pre-pandemic`,
          physicalIntimacyMatching = physical.intimacy.matching,
          healthMandates = health.mandates,
-         virtualOrF2f = virtual.or.f2f)
-survey[is.na(survey)] <- "NA"
-write_csv(survey, "data/survey-cleaned.csv")
+         virtualOrF2f = virtual.or.f2f) %>% 
+  select(desireToConnect,
+         increasedLoneliness,
+         recognizeLoneliness,
+         abilityToBeHappy,
+         healthConfirmationPrePandemic,
+         withoutProof,
+         age, ethnisity, personality, sexuality)
+
+survey.fixed <- data.frame(lapply(survey, function(x) {
+  gsub(' my ability', '', x)
+}))
+survey.fixed[is.na(survey.fixed)] <-  0
+
+
+survey.fixed = survey.fixed %>% 
+  replace_na(list(
+    desireToConnect = "No Answer",
+    increasedLoneliness = "No Answer",
+    recognizeLoneliness = "No Answer",
+    abilityToBeHappy = "No Answer",
+    healthConfirmationPrePandemic = "No Answer",
+    withoutProof = "No Answer"
+  ))
+write_csv(survey.fixed, "data/survey-cleaned.csv", na = "No Answer")
 
 survey %>% 
   group_by(dealBreaking) %>% 
