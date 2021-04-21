@@ -178,6 +178,18 @@ path.domain {
 	height: 100vh;
 }
 
+#outro {
+	background: var(--background-gray);
+	padding: 5em 0;
+}
+
+#outro > article {
+	width: 80%;
+	max-width: 600px;
+	font-size: 0.8em;
+	margin: 0 auto;
+}
+
 @media (max-width: 800px) {
 	.chart__container {
 		min-height: unset;
