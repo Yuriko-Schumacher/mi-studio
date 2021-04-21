@@ -88,9 +88,24 @@ h4 {
 	text-align: center;
 }
 
+ul {
+	margin: 0;
+	padding: 0;
+}
+
+li {
+	list-style: none;
+	font-size: 0.8em;
+}
+
 #menuToggle {
 	width: 100px;
 }
+
+.title {
+	margin: 3em auto;
+}
+
 /* ---------- DATA VIZ --------- */
 .chart__container {
 	max-width: 1210px;
@@ -118,12 +133,26 @@ h4 {
 	z-index: -1;
 }
 
-.explore-data {
-	font-family: var(--sans-serif);
+.black-highlighter {
+	background: black;
+	color: white;
+	z-index: -1;
+}
+
+.hotpink {
+	color: #fc0594;
+}
+
+.pink {
+	color: #ffc7e8;
+}
+
+.gray {
+	color: #aaa;
+}
+
+.white {
 	font-size: 0.8em;
-	text-align: right;
-	font-weight: bold;
-	margin: 0 0 0 auto;
 }
 
 .chart__figure {
@@ -134,6 +163,19 @@ h4 {
 	position: sticky;
 	top: 25vh;
 	/* background: chartreuse; */
+}
+
+.tooltip {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: fit-content; /* added for the final project */
+	visibility: hidden;
+	background-color: rgba(0, 0, 0, 0.8);
+	color: white;
+	font-size: 0.8em;
+	padding: 0.5em 1em;
+	z-index: 9;
 }
 
 .question > p {
@@ -172,6 +214,10 @@ path.domain {
 .x-axis > .tick > text {
 	font-size: 12px;
 	font-family: var(--sans-serif);
+}
+
+.dehighlight {
+	opacity: 0.2;
 }
 
 .devide {

@@ -115,26 +115,19 @@ const colors = {
 d3.csv("data/survey-cleaned.csv").then(function (d) {
 	const data = d;
 	console.log(data);
-	// let idx = 0;
-	// while (idx < 4) {
-	// 	svg[idx] = d3
-	// 		.select(`#survey__${idx}`)
-	// 		.append("svg")
-	// 		.attr("id", `chart__svg__${idx}`)
-	// 		.attr("width", size.w)
-	// 		.attr("height", size.h);
-	// 	group[idx] = svg[idx]
-	// 		.append("g")
-	// 		.classed(`chart__container__${idx}`, true);
-	// 	idx++;
-	// }
-	svg[0] = d3
-		.select(`#chart__1`)
-		.append("svg")
-		.attr("id", `chart__svg__0`)
-		.attr("width", size.w)
-		.attr("height", size.h);
-	group[0] = svg[0].append("g").classed(`chart__container__0`, true);
+	let idx = 0;
+	while (idx < 3) {
+		svg[idx] = d3
+			.select(`#chart__${idx + 1}`)
+			.append("svg")
+			.attr("id", `chart__svg__${idx}`)
+			.attr("width", size.w)
+			.attr("height", size.h);
+		group[idx] = svg[idx]
+			.append("g")
+			.classed(`chart__container__${idx}`, true);
+		idx++;
+	}
 	enterViewDrawChart(data);
 });
 
@@ -143,16 +136,30 @@ function enterViewDrawChart(data) {
 		selector: ".step",
 		enter: (el) => {
 			let index = +d3.select(el).attr("data-index");
-			console.log("step", index);
 			el.classList.add("step-active");
-			changeViz(data, index);
+			if (Number.isInteger(index)) {
+				if (index > -1) {
+					changeViz(data, index);
+					addTooltip(index);
+				} else {
+					removeVis(index);
+				}
+			} else {
+				if (index === 1.2) {
+					highlightCircles("Heavily", 1);
+				} else if (index === 1.3) {
+					dehighlightCircles(1);
+				}
+			}
 		},
 		exit: (el) => {
 			el.classList.remove("step-active");
 			let index = +d3.select(el).attr("data-index");
-			changeViz(data, index - 1);
+			if (index > -1) {
+				changeViz(data, index - 1);
+			}
 		},
-		offset: 0.75,
+		offset: 0.5,
 	});
 }
 
@@ -188,13 +195,8 @@ function changeViz(data, index) {
 	}
 	changeQuestion(index);
 	let options = selectQuestion(data, index);
-	// let group =
-	// 	index < 2
-	// 		? surveyLonelinessG
-	// 		: index < 4
-	// 		? surveyRelationshipG
-	// 		: surveyRiskG;
-	drawNodes(data, index, options, group[0]);
+	let g = index < 2 ? group[0] : index < 4 ? group[1] : group[2];
+	drawNodes(data, index, options, g);
 }
 
 function selectQuestion(data, index) {
@@ -209,7 +211,7 @@ function selectQuestion(data, index) {
 }
 
 function changeQuestion(index) {
-	let id = index < 2 ? "loneliness" : index < 4 ? "relationship" : "risk";
+	let id = index < 2 ? "loneliness" : index < 4 ? "risk" : "relationship";
 	questionSel = d3.select(`#question__${id}`).select("p");
 	questionSel.text(questions[index]);
 }
@@ -217,6 +219,7 @@ function changeQuestion(index) {
 function drawNodes(data, index, options, group) {
 	let thisQ = Object.keys(QandA)[index];
 	let prevQ = Object.keys(QandA)[index - 1];
+	let nextQ = Object.keys(QandA)[index + 1];
 	let thisOption = options.map((el) => el[0]);
 
 	// create scale
@@ -275,30 +278,12 @@ function drawNodes(data, index, options, group) {
 			.data(data, (d) => d.index)
 			.enter()
 			.append("circle")
+			.attr("class", (d) => d[nextQ])
 			.attr("yy", (d) => d[thisQ])
 			.attr("r", 5)
 			.attr("fill", (d) =>
 				index % 2 !== 0 ? colorScale(d[prevQ]) : colorScale(d[thisQ])
 			);
-		// colors[thisQ].forEach((color, i) => {
-		// 	let legendG = group.append("g").classed("color-legendG", true);
-		// 	legendG
-		// 		.append("circle")
-		// 		.attr("cx", i * 170)
-		// 		.attr("cy", 20)
-		// 		.attr("r", 5)
-		// 		.attr("fill", color)
-		// 		.attr("stroke", "lightgray")
-		// 		.attr("stroke-widht", 1);
-		// 	legendG
-		// 		.append("text")
-		// 		.classed("color-legend", true)
-		// 		.attr("transform", `translate(${i * 170 + 10}, 23)`)
-		// 		.text(QandA[thisQ][i]);
-		// });
-		// let xToMove = width / 2 - legendWidth / 2;
-		// legendsG.attr("transform", `translate(${xToMove}, 0)`);
-
 		simulation.on("tick", () => {
 			node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 		});
@@ -307,4 +292,55 @@ function drawNodes(data, index, options, group) {
 			node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 		});
 	}
+}
+
+function removeVis(index) {
+	if (xAxis) {
+		xAxis.remove();
+		xAxis2.remove();
+		questionSel.text("");
+		d3.select(`g.chart__container__${index}`)
+			.select("g.circles")
+			.selectAll("circles")
+			.remove();
+	}
+}
+
+function highlightCircles(toHighlight, index) {
+	let g = index < 2 ? group[0] : index < 4 ? group[1] : group[2];
+	let circles = g.selectAll("circle");
+	circles.classed("dehighlight", true);
+	let circlesToHighlight = g.selectAll(`.${toHighlight}`);
+	console.log(circlesToHighlight);
+	circlesToHighlight.classed("dehighlight", false);
+}
+
+function dehighlightCircles(index) {
+	let g = index < 2 ? group[0] : index < 4 ? group[1] : group[2];
+	let circles = g.selectAll("circle");
+	circles.classed("dehighlight", false);
+}
+
+function addTooltip(index) {
+	let i = index < 2 ? 0 : index < 4 ? 1 : 2;
+	let circles = group[i].selectAll("circle");
+	let tooltip = d3.select(`#chart__${i + 1}`).select(".tooltip");
+	circles
+		.on("mouseover", function (e, d) {
+			let thisCircle = d3.select(this);
+			thisCircle.attr("stroke-width", 2).attr("stroke", "black");
+			let cx = +thisCircle.attr("cx");
+			let cy = +thisCircle.attr("cy");
+			tooltip
+				.style("visibility", "visible")
+				.style("left", `${cx + 10}px`)
+				.style("top", `${cy + 40}px`)
+				.html(
+					`Age: <b>${d.age}</b><br>Ethnicity: <b>${d.ethnisity}</b><br>Sexuality: <b>${d.sexuality}</b><br>Personality: <b>${d.personality}</b>`
+				);
+		})
+		.on("mouseout", function (e, d) {
+			d3.select(this).attr("stroke-width", 1).attr("stroke", "lightgray");
+			tooltip.style("visibility", "hidden");
+		});
 }
