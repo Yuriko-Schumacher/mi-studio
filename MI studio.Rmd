@@ -336,18 +336,16 @@ survey <- survey.raw %>%
 survey.fixed <- data.frame(lapply(survey, function(x) {
   gsub(' my ability', '', x)
 }))
-survey.fixed[is.na(survey.fixed)] <-  0
+survey.fixed <- data.frame(lapply(survey.fixed, function(x) {
+  gsub('more outgoing', '', x)
+}))
+survey.fixed <- data.frame(lapply(survey.fixed, function(x) {
+  gsub('less outgoing', '', x)
+}))
+survey.fixed <- data.frame(lapply(survey.fixed, function(x) {
+  gsub('[()]', '', x)
+}))
 
-
-survey.fixed = survey.fixed %>% 
-  replace_na(list(
-    desireToConnect = "No Answer",
-    increasedLoneliness = "No Answer",
-    recognizeLoneliness = "No Answer",
-    abilityToBeHappy = "No Answer",
-    healthConfirmationPrePandemic = "No Answer",
-    withoutProof = "No Answer"
-  ))
 write_csv(survey.fixed, "data/survey-cleaned.csv", na = "No Answer")
 
 survey %>% 
