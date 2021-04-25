@@ -200,7 +200,7 @@ function enterViewDrawChart(data) {
 				}
 			}
 		},
-		offset: windowSize > 900 ? 0.5 : 0.1,
+		offset: windowSize.w > 900 ? 0.5 : 0.1,
 	});
 }
 
