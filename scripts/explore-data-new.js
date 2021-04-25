@@ -179,7 +179,6 @@ function enterViewDrawChart(data) {
 					window.location.href = "#survey__risk";
 				} else {
 					changeViz(data, index - 1);
-					removeViz(2);
 				}
 			} else {
 				let integer = Math.floor(index);
