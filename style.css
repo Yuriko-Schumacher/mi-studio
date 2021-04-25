@@ -67,25 +67,33 @@ a:hover {
 	transition: 0.4s;
 }
 
+h1,
 h2 {
 	font-family: var(--grotzec);
-	display: inline;
-	margin-right: 20px;
-}
-
-img {
-	display: inline;
-}
-
-.title {
-	text-align: center;
-	margin-bottom: 30px;
+	margin: 0 auto;
 }
 
 h4 {
 	margin: 0 auto;
 	width: 45ch;
 	text-align: center;
+}
+
+.title {
+	text-align: center;
+	margin: 3em auto;
+}
+
+article {
+	width: 60%;
+	max-width: 650px;
+	margin: 0 auto;
+}
+
+@media (max-width: 576px) {
+	article {
+		width: 80%;
+	}
 }
 
 ul {
@@ -102,8 +110,30 @@ li {
 	width: 100px;
 }
 
-.title {
-	margin: 3em auto;
+.arrow {
+	width: 23.63px;
+	margin: 3em auto 0;
+}
+
+.fa-chevron-down {
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+	animation-name: fa-angle-down;
+	animation-timing-function: ease;
+	font-size: 1.5em;
+	text-align: center;
+}
+
+@keyframes fa-angle-down {
+	0% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-15px);
+	}
+	100% {
+		transform: translateY(0);
+	}
 }
 
 /* ---------- DATA VIZ --------- */
@@ -120,6 +150,21 @@ li {
 	width: 35%;
 	max-width: 450px;
 	position: relative;
+}
+
+.loneliness-highlighter {
+	background: var(--dark-navy);
+	color: white;
+}
+
+.risk-highlighter {
+	background: var(--dark-pink);
+	color: white;
+}
+
+.relationship-highlighter {
+	background: var(--dark-yellow);
+	color: white;
 }
 
 .hotpink-highlighter {
@@ -155,27 +200,30 @@ li {
 	font-size: 0.5em;
 }
 
-.chart__figure {
-	height: 300px;
-	margin: 0;
-	width: 65%;
+.figure__container {
 	max-width: 850px;
+	flex: 1 1 70%;
+	margin: 0 2em;
+}
+
+.chart__figure {
+	height: 350px;
+	margin: 0;
+	width: 100%;
 	position: sticky;
 	top: 25vh;
-	/* background: chartreuse; */
 }
 
 .tooltip {
-	position: absolute;
-	top: 0;
+	position: sticky;
+	top: 460px;
 	left: 0;
-	width: fit-content; /* added for the final project */
+	width: fit-content;
 	visibility: hidden;
 	background-color: rgba(0, 0, 0, 0.8);
 	color: white;
 	font-size: 0.8em;
 	padding: 0.5em 1em;
-	z-index: 9;
 }
 
 .question > p {
@@ -193,7 +241,6 @@ li {
 	justify-content: center;
 	align-items: flex-start;
 	min-height: 50vh;
-	margin-top: 4em;
 	padding: 0 2em;
 	opacity: 0.3;
 }
@@ -217,7 +264,7 @@ path.domain {
 }
 
 .dehighlight {
-	opacity: 0.2;
+	opacity: 0.1;
 }
 
 .devide {
@@ -236,7 +283,64 @@ path.domain {
 	margin: 0 auto;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1100px) {
+	body {
+		font-size: 16px;
+	}
+
+	.x-axis > .tick > text {
+		font-size: 10px;
+		font-family: var(--sans-serif);
+	}
+}
+
+@media (max-width: 900px) {
+	.chart__container {
+		display: block;
+		position: relative;
+	}
+	.figure__container {
+		position: sticky;
+		top: 0;
+	}
+	.chart__figure {
+		position: relative;
+		top: 0;
+		background-color: white;
+		padding: 2em 0;
+	}
+	.chart__article {
+		width: 80%;
+		max-width: unset;
+		z-index: -1;
+	}
+	.step {
+		margin: 50vh 0;
+		background: rgb(0, 0, 0, 0.8);
+		color: white;
+		min-height: unset;
+		padding: 1em 2em;
+	}
+	#step__-1,
+	#step__-2,
+	#step__-4 {
+		background: unset;
+	}
+
+	.question > p {
+		width: 80vw;
+	}
+}
+
+@media (max-width: 576px) {
+	.figure__container {
+		margin: 0;
+	}
+	.x-axis > .tick > text {
+		font-size: 6px;
+	}
+}
+/* @media (max-width: 800px) {
 	.chart__container {
 		min-height: unset;
 		margin: 3em auto;
@@ -255,4 +359,4 @@ path.domain {
 		width: 60%;
 		font-size: 0.8em;
 	}
-}
+} */

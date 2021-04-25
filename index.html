@@ -4,7 +4,11 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>MI Studio Team 3</title>
+		<title>Swipes over swabs</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+		/>
 		<link
 			rel="stylesheet"
 			type="text/css"
@@ -19,14 +23,7 @@
 		<div class="nav">
 			<nav role="navigation" class="essential-nav">
 				<div id="menuToggle">
-					<!--
-        A fake / hidden checkbox is used as click reciever,
-        so you can use the :checked selector on it.
-        -->
 					<input type="checkbox" />
-					<!--
-        Some spans to act as a hamburger.
-        -->
 					<span></span>
 					<span></span>
 					<span></span>
@@ -74,32 +71,34 @@
 			<!-- ---------- EXPLORE DATA PAGE ---------- -->
 			<div id="intro">
 				<div class="title">
-					<h2>Swipes Over Swabs</h2>
-					<img src="asset/logo.svg" alt="" width="100" />
-					<h2>Explore survey results</h2>
+					<h1>Swipes Over Swabs</h1>
+					<h1>Explore more survey results</h1>
 				</div>
 				<article>
-					<!-- <p>
-						In a survey of 204 people between the ages of 18 and 29,
-						64% reported dealing with negative emotions more often
-						than they had prior to the pandemic.
+					<p>
+						The team conducted a survey of 204 people between the
+						ages of 18 and 29.
 					</p>
 					<p>
-						"NA" indicates "No answer". Click questions on the right
-						to see what those people answered to the other
-						questions.
-					</p> -->
-					<!-- <p>
-						Each color represents a survey participant who indicated
-						they experienced a specific degree of loneliness.
-						<span class="hot-pink">Hot Pink</span> for those who
-						experienced a high degree of increased loneliness.
-						<span class="pink">Pink</span> for people whose
-						loneliness increased a bit.
-						<span class="black">Black</span> for those who didn't
-						experience any change. Colors will stay the same,
-					</p> -->
+						Questions range from
+						<span class="loneliness-highlighter"
+							><b>fighting loneliness</b></span
+						>
+						to
+						<span class="risk-highlighter"
+							><b>risk of meeting new people</b></span
+						>
+						to
+						<span class="relationship-highlighter"
+							><b>relationships with family and friends</b></span
+						>
+						.
+					</p>
+					<p>Scroll down to see the answers.</p>
 				</article>
+				<div class="arrow">
+					<i class="fas fa-chevron-down"></i>
+				</div>
 			</div>
 			<!-- <div class="container">
 				<div id="survey">
@@ -114,17 +113,21 @@
 			<div id="survey__loneliness">
 				<div id="chart__1__container" class="chart__container">
 					<!-- sticky graphic -->
-					<figure id="chart__1" class="chart__figure">
-						<div id="question__loneliness" class="question">
-							<p></p>
-						</div>
+					<div class="figure__container">
+						<figure id="chart__1" class="chart__figure">
+							<div id="question__loneliness" class="question">
+								<p></p>
+							</div>
+						</figure>
 						<div class="tooltip"></div>
-					</figure>
+					</div>
 
 					<!-- step text -->
 					<article id="chart__1__article" class="chart__article">
 						<div id="step__-1" class="step" data-index="-1">
-							<h2>Survey results about loneliness</h2>
+							<h2 class="loneliness-highlighter">
+								Survey results about loneliness
+							</h2>
 						</div>
 						<div id="step__0" class="step" data-index="0">
 							<p>
@@ -135,9 +138,8 @@
 								often than they had prior to the pandemic.
 							</p>
 							<p>
-								<span class="pink-highlighter">Almost all</span>
-								said they have experienced increased loneliness
-								as the pandemic has gone on.
+								Almost all said they have experienced increased
+								loneliness as the pandemic has gone on.
 							</p>
 						</div>
 						<div id="step__1" class="step" data-index="1">
@@ -147,30 +149,31 @@
 								connect with other people.
 							</p>
 							<p>
+								Colors show answers to a previous question:
+								<b
+									>whether they experienced an increased level
+									of loneliness</b
+								>.
+							</p>
+							<ul>
+								<li>
+									<span class="hotpink">●</span>
+									Yes, often
+								</li>
+								<li>
+									<span class="pink">●</span> Yes, sometimes
+								</li>
+								<li>
+									<span class="black">●</span> No noticed
+									change
+								</li>
+							</ul>
+						</div>
+						<div id="step__1.1" class="step" data-index="1.1">
+							<p>
 								145 people (71.0%) said that their desire to
 								connect with people had increased over the
 								course of the pandemic.
-							</p>
-							<p>
-								Colors show answers to a previous question:
-								whether they experienced an increased level of
-								loneliness.
-							</p>
-							<p>
-								<span class="hotpink-highlighter"
-									>Hot pink circles</span
-								>
-								here indicate those who experienced a high
-								degree of increased loneliness.
-								<span class="pink-highlighter"
-									>Pink circles</span
-								>
-								represent people whose loneliness increased a
-								bit.
-								<span class="black-highlighter"
-									>Black circles</span
-								>
-								indicate those who didn't experience any change.
 							</p>
 						</div>
 						<div id="step__1.2" class="step" data-index="1.2">
@@ -213,19 +216,18 @@
 			<div id="survey__risk">
 				<div id="chart__2__container" class="chart__container">
 					<!-- sticky graphic -->
-					<figure id="chart__2" class="chart__figure">
-						<div id="question__risk" class="question">
-							<p></p>
-						</div>
+					<div class="figure__container">
+						<figure id="chart__2" class="chart__figure">
+							<div id="question__risk" class="question">
+								<p></p>
+							</div>
+						</figure>
 						<div class="tooltip"></div>
-					</figure>
-
-					<div class="devide"></div>
-
+					</div>
 					<!-- step text -->
 					<article id="chart__2__article" class="chart__article">
 						<div id="step__-2" class="step" data-index="-2">
-							<h2>
+							<h2 class="risk-highlighter">
 								Survey results about risk of meeting new people
 							</h2>
 						</div>
@@ -234,7 +236,8 @@
 								Before the pandemic,
 								<span class="hotpink-highlighter">63%</span>
 								of respondents said that it was very important
-								that they knew a potential match was STI-free.
+								that they knew a potential match was healthy,
+								including being STI-free.
 							</p>
 							<p>
 								None of the respondents answered "Very
@@ -243,14 +246,48 @@
 						</div>
 						<div id="step__3" class="step" data-index="3">
 							<p>
-								By comparison, almost 55% (111 in total) of
-								respondents said that they would take someone’s
-								word about being COVID free.
+								This chart shows respondents' answers about
+								whether they would trust their match's word
+								about being COVID free without proof.
 							</p>
 							<p>
 								Colors represent answers to the previous
-								question, about how important it was to know the
-								match was healthy before the pandemic.
+								question:
+								<b
+									>how important it was to know the match was
+									healthy before the pandemic.</b
+								>
+							</p>
+							<ul>
+								<li>
+									<span class="hotpink">●</span>
+									Very important
+								</li>
+								<li>
+									<span class="pink">●</span> Somewhat or
+									slightly important
+								</li>
+								<li>
+									<span class="black">●</span> Somewhat
+									unimportant
+								</li>
+								<li><span class="gray">●</span> No answer</li>
+							</ul>
+						</div>
+						<div id="step__3.1" class="step" data-index="3.1">
+							<p>
+								Almost 55% (111 in total) of respondents said
+								that they would take someone’s word about being
+								COVID free.
+							</p>
+							<p>
+								About half of them also answered, to the
+								previous question, that it was
+								<span class="hotpink-highlighter"
+									>very important</span
+								>
+								that they knew their potential match was healthy
+								before the pandemic.
 							</p>
 						</div>
 						<div id="step__3.2" class="step" data-index="3.2">
@@ -280,7 +317,7 @@
 									<span class="black">●</span> Somewhat
 									unimportant
 								</li>
-								<li><span class="black">●</span> No answer</li>
+								<li><span class="gray">●</span> No answer</li>
 							</ul>
 						</div>
 					</article>
@@ -289,19 +326,20 @@
 			<div id="survey__relationship">
 				<div id="chart__3__container" class="chart__container">
 					<!-- sticky graphic -->
-					<figure id="chart__3" class="chart__figure">
-						<div id="question__relationship" class="question">
-							<p></p>
-						</div>
+					<div class="figure__container">
+						<figure id="chart__3" class="chart__figure">
+							<div id="question__relationship" class="question">
+								<p></p>
+							</div>
+						</figure>
 						<div class="tooltip"></div>
-					</figure>
-
-					<div class="devide"></div>
-
+					</div>
 					<!-- step text -->
 					<article id="chart__3__article" class="chart__article">
 						<div id="step__-4" class="step" data-index="-4">
-							<h2>Survey results about relationship</h2>
+							<h2 class="relationship-highlighter">
+								Survey results about relationship
+							</h2>
 						</div>
 						<div id="step__4" class="step" data-index="4">
 							<p>
@@ -315,16 +353,47 @@
 						</div>
 						<div id="step__5" class="step" data-index="5">
 							<p>
-								Conversely, more than half (110 people, 53.9%)
-								of the respondents said their ability to be
-								happy while alone has been increased due to the
-								pandemic.
+								This chart shows people's ansers about how much
+								the pandemic affected their ability to be happy
+								while alone.
 							</p>
 							<p>
 								Colors represent answers to the previous
-								question, about how important it is that other
-								people recognize their feelings when they feel
-								alone.
+								question, about
+								<b
+									>how important it is that other people
+									recognize their feelings when they feel
+									alone</b
+								>.
+							</p>
+							<ul>
+								<li>
+									<span class="hotpink">●</span>
+									Very or somewhat important
+								</li>
+								<li>
+									<span class="white">◯</span> Generally
+									welcome
+								</li>
+								<li>
+									<span class="black">●</span> Somewhat or
+									very unimportant
+								</li>
+							</ul>
+						</div>
+						<div id="step__5.1" class="step" data-index="5.1">
+							<p>
+								More than half (110 people, 53.9%) of the
+								respondents said their ability to be happy while
+								alone has been increased due to the pandemic.
+							</p>
+							<p>
+								Interestingly, about half of them also answered,
+								to the previous question, that it is
+								<span class="hotpink-highlighter"
+									>very or somewhat important</span
+								>
+								that other people recognize their loneliness.
 							</p>
 						</div>
 						<div id="step__5.2" class="step" data-index="5.2">
@@ -381,18 +450,20 @@
 						respondents (104 people, 51%) said they are introvert.
 					</p>
 					<h2>
+						<br />
 						<a
 							href="https://yuriko-schumacher.github.io/mi-studio/"
 						>
-							<<<<</a
+							<i class="fas fa-chevron-up"></i>　</a
 						>Go back to top
 					</h2>
+					<br />
 					<h2>
-						Go back to main story<a
+						<a
 							href="https://yuriko-schumacher.github.io/love-in-the-covid/"
 						>
-							>>>></a
-						>
+							<i class="fas fa-chevron-left"></i>　</a
+						>Go back to main story
 					</h2>
 				</article>
 			</div>

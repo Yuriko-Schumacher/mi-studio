@@ -137,56 +137,72 @@ function enterViewDrawChart(data) {
 		enter: (el) => {
 			let index = +d3.select(el).attr("data-index");
 			el.classList.add("step-active");
-			if (Number.isInteger(index)) {
-				if (index > -1) {
-					changeViz(data, index);
-					addTooltip(index);
-				} else {
-					removeVis(index);
-				}
+			console.log(index);
+			if (index < 0) {
+				removeViz(0);
+				removeViz(2);
+				removeViz(4);
+			} else if (Number.isInteger(index)) {
+				changeViz(data, index);
+				addTooltip(index);
 			} else {
-				if (index === 1.2) {
-					highlightCircles("Heavily", 1);
+				let integer = Math.floor(index);
+				if (index === 1.1) {
+					highlightCircles(1, "increased");
+				} else if (index === 1.2) {
+					highlightCircles(1, "increased", "Heavily");
 				} else if (index === 1.3) {
 					dehighlightCircles(1);
+				} else if (index === 3.1) {
+					highlightCircles(3, "Likely");
+				} else if (index === 3.2) {
+					dehighlightCircles(2);
+				} else if (index === 5.1) {
+					highlightCircles(5, "increased");
+				} else if (index === 5.2) {
+					dehighlightCircles(5);
 				}
 			}
 		},
 		exit: (el) => {
 			el.classList.remove("step-active");
 			let index = +d3.select(el).attr("data-index");
-			if (index > -1) {
-				changeViz(data, index - 1);
+			if (Number.isInteger(index)) {
+				if (index === 0 || index === 2 || index === 4) {
+					removeViz(0);
+					removeViz(2);
+					removeViz(4);
+				} else if (index === -2) {
+					window.location.href = "#survey__loneliness";
+					removeViz(0);
+				} else if (index === -4) {
+					window.location.href = "#survey__risk";
+				} else {
+					changeViz(data, index - 1);
+					removeViz(2);
+				}
+			} else {
+				let integer = Math.floor(index);
+				if (index === 1.1) {
+					dehighlightCircles(1);
+				} else if (index === 1.2) {
+					highlightCircles(1, "increased");
+				} else if (index === 1.3) {
+					highlightCircles(1, "increased", "Heavily");
+				} else if (index === 3.1) {
+					dehighlightCircles(3);
+				} else if (index === 3.2) {
+					highlightCircles(3, "Likely");
+				} else if (index === 5.1) {
+					dehighlightCircles(5);
+				} else if (index === 5.2) {
+					highlightCircles(5, "increased");
+				}
 			}
 		},
-		offset: 0.5,
+		offset: windowSize > 900 ? 0.5 : 0.1,
 	});
 }
-
-// colorScale = d3
-// 	.scaleOrdinal()
-// 	.domain(selectQuestion(data, 0).map((el) => el[0]))
-// 	.range(colors.increasedLoneliness);
-
-// function enterViewChangeViz(data, selector, partIndex, indexOffset) {
-// 	enterView({
-// 		selector: selector,
-// 		enter: (el) => {
-// 			el.classList.add("step-active");
-// 			let index = el.getAttribute("data-index");
-
-// 			changeViz(data, index);
-// 		},
-// 		exit: (el) => {
-// 			el.classList.remove("step-active");
-// 			let index = el.getAttribute("data-index");
-// 			if (index > indexOffset) {
-// 				changeViz(data, index - 1);
-// 			}
-// 		},
-// 		offset: 0.75,
-// 	});
-// }
 
 function changeViz(data, index) {
 	if (xAxis) {
@@ -255,7 +271,12 @@ function drawNodes(data, index, options, group) {
 
 	let simulation = d3
 		.forceSimulation(data)
-		.force("collide", d3.forceCollide().radius(5.5))
+		.force(
+			"collide",
+			d3
+				.forceCollide()
+				.radius(windowSize.w >= 800 ? 5.5 : (windowSize.w / 800) * 5.5)
+		)
 		.force("charge", d3.forceManyBody().strength(0.3))
 		.force(
 			"x",
@@ -273,14 +294,17 @@ function drawNodes(data, index, options, group) {
 			.append("g")
 			.classed("circles", true)
 			.attr("stroke", "lightgray")
-			.attr("stroke-width", 1)
+			.attr(
+				"stroke-width",
+				windowSize.w >= 800 ? 1 : (windowSize.w / 800) * 1
+			)
 			.selectAll("circle")
 			.data(data, (d) => d.index)
 			.enter()
 			.append("circle")
 			.attr("class", (d) => d[nextQ])
 			.attr("yy", (d) => d[thisQ])
-			.attr("r", 5)
+			.attr("r", windowSize.w >= 800 ? 5 : (windowSize.w / 800) * 5)
 			.attr("fill", (d) =>
 				index % 2 !== 0 ? colorScale(d[prevQ]) : colorScale(d[thisQ])
 			);
@@ -294,24 +318,29 @@ function drawNodes(data, index, options, group) {
 	}
 }
 
-function removeVis(index) {
+function removeViz(index) {
 	if (xAxis) {
 		xAxis.remove();
 		xAxis2.remove();
-		questionSel.text("");
-		d3.select(`g.chart__container__${index}`)
-			.select("g.circles")
-			.selectAll("circles")
-			.remove();
 	}
+	let id = index < 2 ? "loneliness" : index < 4 ? "risk" : "relationship";
+	questionSel = d3.select(`#question__${id}`).select("p");
+	questionSel.text("");
+	d3.select("g.circles").remove();
+	d3.select(".tooltip").style("visibility", "hidden");
 }
 
-function highlightCircles(toHighlight, index) {
+function highlightCircles(index, toHighlight, toHighlight2) {
 	let g = index < 2 ? group[0] : index < 4 ? group[1] : group[2];
 	let circles = g.selectAll("circle");
 	circles.classed("dehighlight", true);
-	let circlesToHighlight = g.selectAll(`.${toHighlight}`);
-	console.log(circlesToHighlight);
+	console.log(arguments);
+	let circlesToHighlight;
+	if (arguments.length === 3) {
+		circlesToHighlight = g.selectAll(`.${toHighlight}.${toHighlight2}`);
+	} else {
+		circlesToHighlight = g.selectAll(`.${toHighlight}`);
+	}
 	circlesToHighlight.classed("dehighlight", false);
 }
 
@@ -324,17 +353,15 @@ function dehighlightCircles(index) {
 function addTooltip(index) {
 	let i = index < 2 ? 0 : index < 4 ? 1 : 2;
 	let circles = group[i].selectAll("circle");
-	let tooltip = d3.select(`#chart__${i + 1}`).select(".tooltip");
+	let tooltip = d3.select(`#chart__${i + 1}__container`).select(".tooltip");
 	circles
 		.on("mouseover", function (e, d) {
 			let thisCircle = d3.select(this);
 			thisCircle.attr("stroke-width", 2).attr("stroke", "black");
 			let cx = +thisCircle.attr("cx");
-			let cy = +thisCircle.attr("cy");
 			tooltip
 				.style("visibility", "visible")
-				.style("left", `${cx + 10}px`)
-				.style("top", `${cy + 40}px`)
+				.style("left", `${cx + 100}px`)
 				.html(
 					`Age: <b>${d.age}</b><br>Ethnicity: <b>${d.ethnisity}</b><br>Sexuality: <b>${d.sexuality}</b><br>Personality: <b>${d.personality}</b>`
 				);
