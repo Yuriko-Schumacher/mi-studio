@@ -173,10 +173,11 @@ function enterViewDrawChart(data) {
 					removeViz(2);
 					removeViz(4);
 				} else if (index === -2) {
-					window.location.href = "#survey__loneliness";
-					removeViz(0);
+					window.location.href =
+						"https://yuriko-schumacher.github.io/mi-studio#survey__loneliness";
 				} else if (index === -4) {
-					window.location.href = "#survey__risk";
+					window.location.href =
+						"https://yuriko-schumacher.github.io/mi-studio#survey__risk";
 				} else {
 					changeViz(data, index - 1);
 				}
