@@ -358,10 +358,10 @@ function addTooltip(index) {
 		.on("mouseover", function (e, d) {
 			let thisCircle = d3.select(this);
 			thisCircle.attr("stroke-width", 2).attr("stroke", "black");
-			let cx = +thisCircle.attr("cx");
+			let x = e.pageX;
 			tooltip
 				.style("visibility", "visible")
-				.style("left", `${cx + 100}px`)
+				.style("left", `${x + 10}px`)
 				.html(
 					`Age: <b>${d.age}</b><br>Ethnicity: <b>${d.ethnisity}</b><br>Sexuality: <b>${d.sexuality}</b><br>Personality: <b>${d.personality}</b>`
 				);
