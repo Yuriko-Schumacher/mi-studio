@@ -243,6 +243,7 @@ li {
 	min-height: 50vh;
 	padding: 0 2em;
 	opacity: 0.3;
+	margin: 30vh 0;
 }
 
 .step-active {
@@ -340,23 +341,3 @@ path.domain {
 		font-size: 6px;
 	}
 }
-/* @media (max-width: 800px) {
-	.chart__container {
-		min-height: unset;
-		margin: 3em auto;
-		flex-direction: column-reverse;
-	}
-	.chart__figure {
-		width: 100%;
-		height: unset;
-	}
-	.chart__article {
-		width: 80%;
-		max-width: unset;
-		margin: 0 auto 2em;
-	}
-	.question > p {
-		width: 60%;
-		font-size: 0.8em;
-	}
-} */

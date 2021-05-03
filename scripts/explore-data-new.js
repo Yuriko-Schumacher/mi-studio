@@ -9,8 +9,6 @@ const size = {
 	h: 234,
 };
 const margin = { top: 0, right: 0, bottom: 75, left: 0 };
-const svg = [];
-const group = [];
 let xAxis, xAxis2;
 
 const questions = [
@@ -112,22 +110,16 @@ const colors = {
 	],
 };
 
+const svg = d3
+	.select("#chart")
+	.append("svg")
+	.attr("width", size.w)
+	.attr("height", size.h);
+const containerG = svg.append("g").classed("chart-container", true);
+
 d3.csv("data/survey-cleaned.csv").then(function (d) {
 	const data = d;
 	console.log(data);
-	let idx = 0;
-	while (idx < 3) {
-		svg[idx] = d3
-			.select(`#chart__${idx + 1}`)
-			.append("svg")
-			.attr("id", `chart__svg__${idx}`)
-			.attr("width", size.w)
-			.attr("height", size.h);
-		group[idx] = svg[idx]
-			.append("g")
-			.classed(`chart__container__${idx}`, true);
-		idx++;
-	}
 	enterViewDrawChart(data);
 });
 
@@ -139,29 +131,28 @@ function enterViewDrawChart(data) {
 			el.classList.add("step-active");
 			console.log(index);
 			if (index < 0) {
-				removeViz(0);
-				removeViz(2);
-				removeViz(4);
+				removeViz();
 			} else if (Number.isInteger(index)) {
 				changeViz(data, index);
-				addTooltip(index);
+				addTooltip();
 			} else {
-				let integer = Math.floor(index);
 				if (index === 1.1) {
-					highlightCircles(1, "increased");
+					highlightCircles("increased");
+					console.log("1.1!");
 				} else if (index === 1.2) {
-					highlightCircles(1, "increased", "Heavily");
+					highlightCircles("increased", "Heavily");
 				} else if (index === 1.3) {
-					dehighlightCircles(1);
+					dehighlightCircles();
 				} else if (index === 3.1) {
-					highlightCircles(3, "Likely");
+					highlightCircles("Likely");
 				} else if (index === 3.2) {
-					dehighlightCircles(2);
+					dehighlightCircles();
 				} else if (index === 5.1) {
-					highlightCircles(5, "increased");
+					highlightCircles("increased");
 				} else if (index === 5.2) {
-					dehighlightCircles(5);
+					dehighlightCircles();
 				}
+				addTooltip();
 			}
 		},
 		exit: (el) => {
@@ -169,34 +160,31 @@ function enterViewDrawChart(data) {
 			let index = +d3.select(el).attr("data-index");
 			if (Number.isInteger(index)) {
 				if (index === 0 || index === 2 || index === 4) {
-					removeViz(0);
-					removeViz(2);
-					removeViz(4);
+					removeViz();
+				} else if (index === -1) {
+					return;
 				} else if (index === -2) {
-					window.location.href =
-						"https://yuriko-schumacher.github.io/mi-studio#survey__loneliness";
+					changeViz(data, 1);
 				} else if (index === -4) {
-					window.location.href =
-						"https://yuriko-schumacher.github.io/mi-studio#survey__risk";
+					changeViz(data, 3);
 				} else {
 					changeViz(data, index - 1);
 				}
 			} else {
-				let integer = Math.floor(index);
 				if (index === 1.1) {
-					dehighlightCircles(1);
+					dehighlightCircles();
 				} else if (index === 1.2) {
-					highlightCircles(1, "increased");
+					highlightCircles("increased");
 				} else if (index === 1.3) {
-					highlightCircles(1, "increased", "Heavily");
+					highlightCircles("increased", "Heavily");
 				} else if (index === 3.1) {
-					dehighlightCircles(3);
+					dehighlightCircles();
 				} else if (index === 3.2) {
-					highlightCircles(3, "Likely");
+					highlightCircles("Likely");
 				} else if (index === 5.1) {
-					dehighlightCircles(5);
+					dehighlightCircles();
 				} else if (index === 5.2) {
-					highlightCircles(5, "increased");
+					highlightCircles("increased");
 				}
 			}
 		},
@@ -210,9 +198,10 @@ function changeViz(data, index) {
 		xAxis2.remove();
 	}
 	changeQuestion(index);
+	let colorIndex = index < 2 ? 0 : index < 4 ? 2 : 4;
+	console.log(colorIndex);
 	let options = selectQuestion(data, index);
-	let g = index < 2 ? group[0] : index < 4 ? group[1] : group[2];
-	drawNodes(data, index, options, g);
+	drawNodes(data, index, colorIndex, options);
 }
 
 function selectQuestion(data, index) {
@@ -227,15 +216,13 @@ function selectQuestion(data, index) {
 }
 
 function changeQuestion(index) {
-	let id = index < 2 ? "loneliness" : index < 4 ? "risk" : "relationship";
-	questionSel = d3.select(`#question__${id}`).select("p");
-	questionSel.text(questions[index]);
+	d3.select(`#question`).select("p").text(questions[index]);
 }
 
-function drawNodes(data, index, options, group) {
+function drawNodes(data, index, colorIndex, options) {
 	let thisQ = Object.keys(QandA)[index];
 	let prevQ = Object.keys(QandA)[index - 1];
-	let nextQ = Object.keys(QandA)[index + 1];
+	let QForColor = Object.keys(QandA)[colorIndex];
 	let thisOption = options.map((el) => el[0]);
 
 	// create scale
@@ -244,20 +231,18 @@ function drawNodes(data, index, options, group) {
 		.domain(thisOption)
 		.range([margin.left, size.w - margin.right]);
 
-	if (index % 2 === 0) {
-		colorScale = d3
-			.scaleOrdinal()
-			.domain(selectQuestion(data, index).map((el) => el[0]))
-			.range(colors[thisQ]);
-	}
+	colorScale = d3
+		.scaleOrdinal()
+		.domain(selectQuestion(data, colorIndex).map((el) => el[0]))
+		.range(colors[QForColor]);
 
-	xAxis = group
+	xAxis = containerG
 		.append("g")
 		.classed("x-axis", true)
 		.call(d3.axisBottom(xScale))
 		.attr("transform", `translate(0, ${size.h - 35})`);
 
-	xAxis2 = group
+	xAxis2 = containerG
 		.append("g")
 		.classed("x-axis", true)
 		.call(
@@ -286,11 +271,11 @@ function drawNodes(data, index, options, group) {
 		)
 		.force("y", d3.forceY().y(size.h / 2));
 
-	let circles = group.selectAll("circle");
+	let circles = containerG.selectAll("circle");
 	console.log(thisQ);
 
 	if (circles.nodes().length === 0) {
-		node = group
+		node = containerG
 			.append("g")
 			.classed("circles", true)
 			.attr("stroke", "lightgray")
@@ -302,8 +287,7 @@ function drawNodes(data, index, options, group) {
 			.data(data, (d) => d.index)
 			.enter()
 			.append("circle")
-			.attr("class", (d) => d[nextQ])
-			.attr("yy", (d) => d[thisQ])
+			.attr("class", (d) => d[thisQ])
 			.attr("r", windowSize.w >= 800 ? 5 : (windowSize.w / 800) * 5)
 			.attr("fill", (d) =>
 				index % 2 !== 0 ? colorScale(d[prevQ]) : colorScale(d[thisQ])
@@ -313,47 +297,49 @@ function drawNodes(data, index, options, group) {
 		});
 	} else {
 		simulation.on("tick", () => {
+			node.attr("class", (d) => d[thisQ]);
 			node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 		});
 	}
 }
 
-function removeViz(index) {
+function removeViz() {
 	if (xAxis) {
 		xAxis.remove();
 		xAxis2.remove();
 	}
-	let id = index < 2 ? "loneliness" : index < 4 ? "risk" : "relationship";
-	questionSel = d3.select(`#question__${id}`).select("p");
-	questionSel.text("");
+	d3.select(`#question`).select("p").text("");
 	d3.select("g.circles").remove();
 	d3.select(".tooltip").style("visibility", "hidden");
 }
 
-function highlightCircles(index, toHighlight, toHighlight2) {
-	let g = index < 2 ? group[0] : index < 4 ? group[1] : group[2];
-	let circles = g.selectAll("circle");
-	circles.classed("dehighlight", true);
+function highlightCircles(toHighlight, toHighlight2) {
+	containerG
+		.select("g.circles")
+		.selectAll("circle")
+		.classed("dehighlight", true);
 	console.log(arguments);
 	let circlesToHighlight;
-	if (arguments.length === 3) {
-		circlesToHighlight = g.selectAll(`.${toHighlight}.${toHighlight2}`);
+	if (arguments.length === 2) {
+		circlesToHighlight = containerG
+			.select("g.circles")
+			.selectAll(`circle.${toHighlight}.${toHighlight2}`);
 	} else {
-		circlesToHighlight = g.selectAll(`.${toHighlight}`);
+		circlesToHighlight = containerG
+			.select("g.circles")
+			.selectAll(`circle.${toHighlight}`);
 	}
+	console.log(circlesToHighlight);
 	circlesToHighlight.classed("dehighlight", false);
 }
 
-function dehighlightCircles(index) {
-	let g = index < 2 ? group[0] : index < 4 ? group[1] : group[2];
-	let circles = g.selectAll("circle");
-	circles.classed("dehighlight", false);
+function dehighlightCircles() {
+	containerG.selectAll("circle").classed("dehighlight", false);
 }
 
-function addTooltip(index) {
-	let i = index < 2 ? 0 : index < 4 ? 1 : 2;
-	let circles = group[i].selectAll("circle");
-	let tooltip = d3.select(`#chart__${i + 1}__container`).select(".tooltip");
+function addTooltip() {
+	let circles = containerG.selectAll("circle");
+	let tooltip = d3.select(`#chart__container`).select(".tooltip");
 	circles
 		.on("mouseover", function (e, d) {
 			let thisCircle = d3.select(this);
@@ -366,7 +352,7 @@ function addTooltip(index) {
 					`Age: <b>${d.age}</b><br>Ethnicity: <b>${d.ethnisity}</b><br>Sexuality: <b>${d.sexuality}</b><br>Personality: <b>${d.personality}</b>`
 				);
 		})
-		.on("mouseout", function (e, d) {
+		.on("mouseout", function () {
 			d3.select(this).attr("stroke-width", 1).attr("stroke", "lightgray");
 			tooltip.style("visibility", "hidden");
 		});
