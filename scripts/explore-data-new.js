@@ -296,8 +296,8 @@ function drawNodes(data, index, colorIndex, options) {
 			node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 		});
 	} else {
+		node.attr("class", (d) => d[thisQ]);
 		simulation.on("tick", () => {
-			node.attr("class", (d) => d[thisQ]);
 			node.attr("cx", (d) => d.x).attr("cy", (d) => d.y);
 		});
 	}
