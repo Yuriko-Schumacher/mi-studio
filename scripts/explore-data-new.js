@@ -138,7 +138,6 @@ function enterViewDrawChart(data) {
 			} else {
 				if (index === 1.1) {
 					highlightCircles("increased");
-					console.log("1.1!");
 				} else if (index === 1.2) {
 					highlightCircles("increased", "Heavily");
 				} else if (index === 1.3) {
@@ -187,6 +186,7 @@ function enterViewDrawChart(data) {
 					highlightCircles("increased");
 				}
 			}
+			addTooltip();
 		},
 		offset: windowSize.w > 900 ? 0.5 : 0.1,
 	});
@@ -272,7 +272,6 @@ function drawNodes(data, index, colorIndex, options) {
 		.force("y", d3.forceY().y(size.h / 2));
 
 	let circles = containerG.selectAll("circle");
-	console.log(thisQ);
 
 	if (circles.nodes().length === 0) {
 		node = containerG
@@ -318,7 +317,6 @@ function highlightCircles(toHighlight, toHighlight2) {
 		.select("g.circles")
 		.selectAll("circle")
 		.classed("dehighlight", true);
-	console.log(arguments);
 	let circlesToHighlight;
 	if (arguments.length === 2) {
 		circlesToHighlight = containerG
@@ -329,7 +327,6 @@ function highlightCircles(toHighlight, toHighlight2) {
 			.select("g.circles")
 			.selectAll(`circle.${toHighlight}`);
 	}
-	console.log(circlesToHighlight);
 	circlesToHighlight.classed("dehighlight", false);
 }
 
